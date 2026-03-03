@@ -1,0 +1,171 @@
+#include <stdio.h>
+#include <string.h>
+
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+
+#include "esp_system.h"
+#include "esp_log.h"
+#include "nvs_flash.h"
+
+#include "esp_bt.h"
+#include "esp_gap_ble_api.h"
+#include "esp_gatts_api.h"
+#include "esp_bt_main.h"
+
+#include "driver/gpio.h"
+
+#define DEVICE_NAME         "ESP32_LED"
+#define SERVICE_UUID        0x00FF
+#define CHAR_UUID           0xFF01
+
+#define LED_GPIO            2
+
+static uint8_t led_value = 0;
+static uint16_t handle_table[3];
+
+enum {
+    IDX_SVC,
+    IDX_CHAR,
+    IDX_CHAR_VAL,
+};
+
+#define GATTS_NUM_HANDLE 3
+
+static const uint16_t primary_service_uuid = ESP_GATT_UUID_PRI_SERVICE;
+static const uint16_t character_declaration_uuid = ESP_GATT_UUID_CHAR_DECLARE;
+static const uint8_t char_prop_read_write = ESP_GATT_CHAR_PROP_BIT_READ | ESP_GATT_CHAR_PROP_BIT_WRITE;
+
+static const esp_gatts_attr_db_t gatt_db[GATTS_NUM_HANDLE] = {
+
+    // Service Declaration
+    [IDX_SVC] =
+    {{ESP_GATT_AUTO_RSP},
+     {ESP_UUID_LEN_16, (uint8_t *)&primary_service_uuid, ESP_GATT_PERM_READ,
+      sizeof(uint16_t), sizeof(SERVICE_UUID), (uint8_t *)&SERVICE_UUID}},
+
+    // Characteristic Declaration
+    [IDX_CHAR] =
+    {{ESP_GATT_AUTO_RSP},
+     {ESP_UUID_LEN_16, (uint8_t *)&character_declaration_uuid, ESP_GATT_PERM_READ,
+      sizeof(uint8_t), sizeof(uint8_t), (uint8_t *)&char_prop_read_write}},
+
+    // Characteristic Value
+    [IDX_CHAR_VAL] =
+    {{ESP_GATT_RSP_BY_APP},
+     {ESP_UUID_LEN_16, (uint8_t *)&CHAR_UUID,
+      ESP_GATT_PERM_READ | ESP_GATT_PERM_WRITE,
+      sizeof(uint8_t), sizeof(led_value), (uint8_t *)&led_value}},
+};
+
+static void gap_event_handler(esp_gap_ble_cb_event_t event,
+                              esp_ble_gap_cb_param_t *param)
+{
+    if (event == ESP_GAP_BLE_ADV_DATA_SET_COMPLETE_EVT) {
+        esp_ble_gap_start_advertising(&(esp_ble_adv_params_t){
+            .adv_int_min = 0x20,
+            .adv_int_max = 0x40,
+            .adv_type = ADV_TYPE_IND,
+            .own_addr_type = BLE_ADDR_TYPE_PUBLIC,
+            .channel_map = ADV_CHNL_ALL,
+            .adv_filter_policy = ADV_FILTER_ALLOW_SCAN_ANY_CON_ANY,
+        });
+    }
+}
+
+static void gatts_event_handler(esp_gatts_cb_event_t event,
+                                esp_gatt_if_t gatts_if,
+                                esp_ble_gatts_cb_param_t *param)
+{
+    switch (event) {
+
+    case ESP_GATTS_REG_EVT:
+        esp_ble_gap_set_device_name(DEVICE_NAME);
+
+        esp_ble_adv_data_t adv_data = {
+            .set_scan_rsp = false,
+            .include_name = true,
+            .include_txpower = true,
+            .flag = ESP_BLE_ADV_FLAG_GEN_DISC |
+                    ESP_BLE_ADV_FLAG_BREDR_NOT_SPT,
+        };
+
+        esp_ble_gap_config_adv_data(&adv_data);
+
+        esp_ble_gatts_create_attr_tab(gatt_db,
+                                      gatts_if,
+                                      GATTS_NUM_HANDLE,
+                                      0);
+        break;
+
+    case ESP_GATTS_CREAT_ATTR_TAB_EVT:
+        if (param->add_attr_tab.status == ESP_GATT_OK) {
+            memcpy(handle_table, param->add_attr_tab.handles,
+                   sizeof(handle_table));
+            esp_ble_gatts_start_service(handle_table[IDX_SVC]);
+        }
+        break;
+
+    case ESP_GATTS_READ_EVT: {
+        ESP_LOGI("BLE", "Read Request");
+
+        esp_gatt_rsp_t rsp;
+        memset(&rsp, 0, sizeof(rsp));
+        rsp.attr_value.handle = param->read.handle;
+        rsp.attr_value.len = sizeof(led_value);
+        rsp.attr_value.value[0] = led_value;
+
+        esp_ble_gatts_send_response(gatts_if,
+                                    param->read.conn_id,
+                                    param->read.trans_id,
+                                    ESP_GATT_OK,
+                                    &rsp);
+        break;
+    }
+
+    case ESP_GATTS_WRITE_EVT:
+
+        if (!param->write.is_prep) {
+            led_value = param->write.value[0];
+
+            ESP_LOGI("BLE", "Write Value: %d", led_value);
+
+            if (led_value == 1) {
+                gpio_set_level(LED_GPIO, 1);
+                ESP_LOGI("LED", "ON");
+            } else {
+                gpio_set_level(LED_GPIO, 0);
+                ESP_LOGI("LED", "OFF");
+            }
+        }
+        break;
+
+    default:
+        break;
+    }
+}
+
+void app_main(void)
+{
+    nvs_flash_init();
+
+    gpio_config_t io_conf = {
+        .pin_bit_mask = (1ULL << LED_GPIO),
+        .mode = GPIO_MODE_OUTPUT,
+        .pull_up_en = 0,
+        .pull_down_en = 0,
+        .intr_type = GPIO_INTR_DISABLE
+    };
+    gpio_config(&io_conf);
+
+    esp_bt_controller_config_t bt_cfg = BT_CONTROLLER_INIT_CONFIG_DEFAULT();
+    esp_bt_controller_init(&bt_cfg);
+    esp_bt_controller_enable(ESP_BT_MODE_BLE);
+
+    esp_bluedroid_init();
+    esp_bluedroid_enable();
+
+    esp_ble_gap_register_callback(gap_event_handler);
+    esp_ble_gatts_register_callback(gatts_event_handler);
+    esp_ble_gatts_app_register(0);
+}

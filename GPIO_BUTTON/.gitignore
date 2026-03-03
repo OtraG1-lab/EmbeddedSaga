@@ -1,0 +1,26 @@
+
+# Build directories
+build/
+cmake-build-*/
+
+# IDE settings
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Object files and libraries
+*.o
+*.a
+*.so
+*.lib
+*.dll
+*.exe
+
+# Dependencies
+components/*/build/
+
+# Kconfig files
+sdkconfig.old

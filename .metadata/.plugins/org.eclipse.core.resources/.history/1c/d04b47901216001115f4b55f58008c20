@@ -1,0 +1,12 @@
+#ifndef WIFI_H
+#define WIFI_H
+
+#include "freertos/event_groups.h"
+
+// Event group for Wi-Fi connection
+extern EventGroupHandle_t wifi_event_group;
+
+// Function to initialize Wi-Fi
+void wifi_init(void);
+
+#endif // WIFI_H

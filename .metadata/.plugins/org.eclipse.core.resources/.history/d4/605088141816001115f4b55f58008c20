@@ -1,0 +1,34 @@
+#include "esp_http_server.h"					//http server
+#include "driver/gpio.h"						//GPIOs
+
+//Global Variables
+#define LED_GPIO 2
+
+static httpd_handle_t server = NULL;
+int sensor_value = 123;   // dummy data
+
+
+//HTTP Handler - ESP32 HELLO
+static esp_err_t hello_handler(httpd_req_t *req)
+{
+    httpd_resp_send(req, "Hello ESP32", HTTPD_RESP_USE_STRLEN);
+    return ESP_OK;
+}
+
+//HTTP handler - Send data
+static esp_err_t data_handler(httpd_req_t *req)
+{
+    char response[50];
+    sprintf(response, "Sensor value = %d", sensor_value);
+
+    httpd_resp_send(req, response, HTTPD_RESP_USE_STRLEN);
+    return ESP_OK;
+}
+
+//HTTP Handler LED ON
+static esp_err_t led_on_handler(httpd_req_t *req)
+{
+    gpio_set_level(LED_GPIO, 1);
+    httpd_resp_send(req, "LED ON", HTTPD_RESP_USE_STRLEN);
+    return ESP_OK;
+}

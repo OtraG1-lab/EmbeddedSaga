@@ -1,0 +1,2 @@
+source D:/Laxmi/ESP32_Projects/OTA_BLE/build/gdbinit/symbols
+source D:/Laxmi/ESP32_Projects/OTA_BLE/build/gdbinit/connect

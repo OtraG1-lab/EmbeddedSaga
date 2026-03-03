@@ -1,0 +1,61 @@
+#include <string.h>
+#include "driver/uart.h"
+#include "esp_log.h"
+
+#define UART_PORT UART_NUM_0
+#define BUF_SIZE 128
+
+void app_main(void)
+{
+    uint8_t data[BUF_SIZE];
+
+    // 1️⃣ UART configuration
+    const uart_config_t uart_config = {
+        .baud_rate = 115200,
+        .data_bits = UART_DATA_8_BITS,
+        .parity    = UART_PARITY_DISABLE,
+        .stop_bits = UART_STOP_BITS_1,
+        .flow_ctrl = UART_HW_FLOWCTRL_DISABLE
+    };
+
+    // 2️⃣ Apply config
+    uart_param_config(UART_PORT, &uart_config);
+
+    // 3️⃣ UART0 pins are fixed → no change
+    uart_set_pin(
+        UART_PORT,
+        UART_PIN_NO_CHANGE,
+        UART_PIN_NO_CHANGE,
+        UART_PIN_NO_CHANGE,
+        UART_PIN_NO_CHANGE
+    );
+
+    // 4️⃣ INSTALL DRIVER  ✅ REQUIRED
+    uart_driver_install(UART_PORT, BUF_SIZE * 2, 0, 0, NULL, 0);
+
+    ESP_LOGI("UART", "UART ready. Type and press ENTER.");
+
+char line[128];
+int pos = 0;
+
+while (1)
+{
+    uint8_t ch;
+    int len = uart_read_bytes(UART_PORT, &ch, 1, pdMS_TO_TICKS(100));
+
+    if (len > 0)
+    {
+        if (ch == '\n')   // ENTER pressed
+        {
+            line[pos] = '\0';
+            ESP_LOGI("UART", "Line received: %s", line);
+            pos = 0; // reset buffer
+        }
+        else
+        {
+            if (pos < sizeof(line) - 1)
+            {
+                line[pos++] = ch;
+            }
+        }
+    }

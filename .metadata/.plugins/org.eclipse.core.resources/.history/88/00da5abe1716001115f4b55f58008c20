@@ -1,0 +1,8 @@
+#include "esp_http_server.h"					//http server
+#include "driver/gpio.h"						//GPIOs
+
+//Global VAriables
+#define LED_GPIO 2
+
+static httpd_handle_t server = NULL;
+int sensor_value = 123;   // dummy data

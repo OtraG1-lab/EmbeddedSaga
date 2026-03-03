@@ -1,0 +1,2 @@
+//UART0 is usually connected to USB-Serial, used for logging.UART1 / UART2 can be used for peripherals like GPS, Bluetooth modules, sensors, etc.
+

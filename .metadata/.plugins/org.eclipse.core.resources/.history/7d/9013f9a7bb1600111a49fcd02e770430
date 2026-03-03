@@ -1,0 +1,5 @@
+/*Advertises as ESP32_BLE
+
+Has one characteristic “Counter”
+
+Client (phone) can read and write the characteristic*/

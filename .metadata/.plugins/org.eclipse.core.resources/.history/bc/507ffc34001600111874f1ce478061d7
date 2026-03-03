@@ -1,0 +1,68 @@
+ /* UART0 is usually connected to USB-Serial, used for logging.UART1
+ / UART2 can be used for peripherals like GPS, Bluetooth modules, sensors, etc*/
+
+#include <string.h>
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "driver/uart.h"
+#include "esp_log.h"
+
+#define UART_PORT_NUM 1       // Use UART1
+#define TXD_PIN 17         // Connect to RX of device
+#define RXD_PIN 16         // Connect to TX of device
+#define BUF_SIZE (1024)					//Define Buffer size in byte
+
+static const char *TAG = "UART_EX";
+
+// Task to read data from UART
+/* This is a FreeRTOS task.Runs in parallel with other tasks.Responsible only for receiving data from UART.*/
+void uart_rx_task(void *arg)
+{
+    uint8_t *data = (uint8_t *) malloc(BUF_SIZE);
+    while(1)
+    {
+        int len = uart_read_bytes(UART_PORT_NUM, data, BUF_SIZE - 1, pdMS_TO_TICKS(1000));
+        if(len > 0)
+        {
+            data[len] = '\0';  // Null-terminate for string printing
+            ESP_LOGI(TAG, "Received: %s", data);
+        }
+        vTaskDelay(pdMS_TO_TICKS(10));
+    }
+    free(data);
+}
+
+// Task to send data periodically
+void uart_tx_task(void *arg)
+{
+    const char *test_str = "Hello UART!\n";
+    while(1)
+    {
+        uart_write_bytes(UART_PORT_NUM, test_str, strlen(test_str));
+        ESP_LOGI(TAG, "Sent: %s", test_str);
+        vTaskDelay(pdMS_TO_TICKS(1000)); // Send every 1 second
+    }
+}
+
+void app_main(void)
+{
+    // UART configuration
+    const uart_config_t uart_config = {
+        .baud_rate = 115200,
+        .data_bits = UART_DATA_8_BITS,
+        .parity    = UART_PARITY_DISABLE,
+        .stop_bits = UART_STOP_BITS_1,
+        .flow_ctrl = UART_HW_FLOWCTRL_DISABLE
+    };
+
+    // Configure UART
+    uart_param_config(UART_PORT_NUM, &uart_config);
+    uart_set_pin(UART_PORT_NUM, TXD_PIN, RXD_PIN, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE);
+    uart_driver_install(UART_PORT_NUM, BUF_SIZE * 2, 0, 0, NULL, 0);
+
+    ESP_LOGI(TAG, "UART Initialized");
+
+    // Create tasks for TX and RX
+    //xTaskCreate(uart_rx_task, "uart_rx_task", 2048, NULL, 10, NULL);
+    xTaskCreate(uart_tx_task, "uart_tx_task", 2048, NULL, 10, NULL);
+}

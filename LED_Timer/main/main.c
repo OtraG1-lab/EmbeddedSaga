@@ -1,0 +1,36 @@
+//LED toggles every 1 second using a timer callback.////
+
+#include "freertos/FreeRTOS.h"
+#include "freertos/timers.h"
+#include "driver/gpio.h"
+
+#define LED_PIN 2							//Internal led is conncted to gpio2
+
+static TimerHandle_t led_timer;
+static bool led_state = false;
+
+/* Timer callback */
+void led_timer_callback(TimerHandle_t xTimer)
+{
+    led_state = !led_state;
+    gpio_set_level(LED_PIN, led_state);
+}
+
+void app_main(void)//
+{
+    // Configure LED pin
+    gpio_reset_pin(LED_PIN);
+    gpio_set_direction(LED_PIN, GPIO_MODE_OUTPUT);
+
+    // Create timer (1 second period)
+    led_timer = xTimerCreate(
+        "LED_Timer",                 // Timer name
+        pdMS_TO_TICKS(1000),         // Period = 1 second
+        pdTRUE,                      // Auto-reload
+        NULL,                        // Timer ID (not used)
+        led_timer_callback           // Callback function
+    );
+
+    // Start timer
+    xTimerStart(led_timer, 0);
+}

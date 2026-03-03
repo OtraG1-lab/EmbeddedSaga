@@ -1,0 +1,21 @@
+                             Memory Type Usage Summary                              
++----------------------------------------------------------------------------------+
+| Memory Type/Section   | Used [bytes] | Used [%] | Remain [bytes] | Total [bytes] |
+|-----------------------+--------------+----------+----------------+---------------|
+| Flash Code            |       522910 |          |                |               |
+|    .text              |       522910 |          |                |               |
+| Flash Data            |        99144 |          |                |               |
+|    .rodata            |        98888 |          |                |               |
+|    .appdesc           |          256 |          |                |               |
+| IRAM                  |        96187 |    73.38 |          34885 |        131072 |
+|    .text              |        95159 |     72.6 |                |               |
+|    .vectors           |         1028 |     0.78 |                |               |
+| DRAM                  |        34152 |     18.9 |         146584 |        180736 |
+|    .bss               |        17176 |      9.5 |                |               |
+|    .data              |        16976 |     9.39 |                |               |
+| RTC SLOW              |           56 |     0.68 |           8136 |          8192 |
+|    .force_slow        |           32 |     0.39 |                |               |
+|    .rtc_slow_reserved |           24 |     0.29 |                |               |
++----------------------------------------------------------------------------------+
+C:\Espressif\python_env\idf5.5_py3.11_env\Scripts\python.exe C:/Espressif/frameworks/esp-idf-v5.5.3/\components\partition_table\gen_esp32part.py D:\Laxmi\ESP32_Projects\OTA_WIFI\build\partition_table\partition-table.bin
+Total time taken to build the project: 44,763 ms

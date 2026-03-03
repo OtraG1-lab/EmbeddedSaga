@@ -1,0 +1,2 @@
+source D:/Laxmi/ESP32_Projects/GPIO_TIMER/build/bootloader/gdbinit/symbols
+source D:/Laxmi/ESP32_Projects/GPIO_TIMER/build/bootloader/gdbinit/connect

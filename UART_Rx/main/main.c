@@ -1,0 +1,82 @@
+#include <string.h>           //Needed for string operations like strlen(), memset(), or in your code, for '\0' null termination.
+#include "driver/uart.h"	//Provides ESP-IDF APIs for UART configuration, reading, writing, and installing the driver.
+#include "esp_log.h"		//Provides logging macros like ESP_LOGI, ESP_LOGE, ESP_LOGW, which print messages with tag and level.
+
+
+//ESP32 has multiple UART ports (0, 1, 2). UART0 is usually connected to USB-to-Serial, used for flashing and console logging
+#define UART_PORT UART_NUM_0
+
+//Size of your buffer to store received data is 128byte
+#define BUF_SIZE 128
+
+void app_main(void)
+{
+	//Buffer to store incoming UART bytes. uint8_t because UART is byte-oriented.
+    uint8_t data[BUF_SIZE];
+
+    // UART configuration
+    const uart_config_t uart_config = {
+        .baud_rate = 115200,				//Speed of communication (bits per second). 115200 is standard.
+        .data_bits = UART_DATA_8_BITS,		//Each frame carries 8 data bits.
+        .parity    = UART_PARITY_DISABLE,	//No parity check (DISABLE).
+        .stop_bits = UART_STOP_BITS_1,		//1 stop bit signals end of frame.
+        .flow_ctrl = UART_HW_FLOWCTRL_DISABLE	//No hardware flow control (RTS/CTS pins).
+    };
+
+    // 2 Apply config
+    /*This function sets the UART hardware registers according to the struct.
+       It doesn’t install the driver yet — it just sets baud rate, bits, parity, stop bits.*/
+    uart_param_config(UART_PORT, &uart_config);
+
+    // 3 UART0 pins are fixed → no change
+    
+    
+    //Tells ESP32 which GPIO pins to use for UART TX, RX, RTS, CTS.
+    uart_set_pin(
+        UART_PORT,						//uart 0
+        UART_PIN_NO_CHANGE,
+        UART_PIN_NO_CHANGE,
+        UART_PIN_NO_CHANGE,
+        UART_PIN_NO_CHANGE
+    );
+
+    // 4 INSTALL DRIVER :Installs the UART driver (software layer) in ESP-IDF
+    /*UART_PORT → Which UART to install driver for.
+		BUF_SIZE * 2 → RX buffer size in bytes (double your working buffer).
+		0 → TX buffer size (0 = no TX buffer).
+		0 → Queue size for UART events (0 = no queue).
+		NULL → Pointer to queue handle (optional).
+		0 → Interrupt allocation flags.*/
+    uart_driver_install(UART_PORT, BUF_SIZE * 2, 0, 0, NULL, 0);
+
+     /*Prints a message on the console: [I][UART] UART ready. Type and press ENTER.
+       Tag "UART" is used for filtering logs*/
+    ESP_LOGI("UART", "UART ready. Type and press ENTER.");
+
+    // 5️  Read loop
+    while (1)
+    {
+		
+		/*uart_read_bytes() → Reads bytes from UART RX buffer (filled by interrupt).
+		  UART_PORT → Port to read from.
+          data → Destination buffer.
+		  BUF_SIZE - 1 → Max bytes to read. -1 to leave space for '\0'.
+          pdMS_TO_TICKS(100) → Timeout in RTOS ticks (100 ms converted to ticks).*/
+        int len = uart_read_bytes(
+            UART_PORT,
+            data,
+            BUF_SIZE - 1,
+            pdMS_TO_TICKS(100)
+        );
+        /*len > 0 → Only process if data is received.
+		data[len] = '\0'; → Null-terminate the array so it can be printed as a string.
+		ESP_LOGI() → Print the received string on the console.
+		Internal: UART driver just gives raw bytes. You need '\0' because ESP_LOGI expects a C string.*/
+
+        if (len > 0)
+        {
+            data[len] = '\0';
+            ESP_LOGI("UART", "Received: %s", data);
+        }
+    }
+}
