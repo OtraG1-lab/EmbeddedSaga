@@ -1,7 +1,7 @@
 {
     "version":            "1.2",
     "project_name":       "app-template",
-    "project_version":    "73c9d79-dirty",
+    "project_version":    "26393940-dirty",
     "project_path":       "D:/Laxmi/ESP32_Projects/OTA_LED_BLE",
     "idf_path":           "C:/Espressif/frameworks/esp-idf-v5.5.3",
     "build_dir":          "D:/Laxmi/ESP32_Projects/OTA_LED_BLE/build",

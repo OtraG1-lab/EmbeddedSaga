@@ -5,7 +5,7 @@ ESP Wi-Fi driver
 Event loop
    ↓
 wifi_event_handler(arg, base, id, data)*/ 
-
+//STA mode ,AP Mode	
 #include <string.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/event_groups.h"
@@ -18,7 +18,7 @@ wifi_event_handler(arg, base, id, data)*/
 #define WIFI_SSID "DEXTRIS 2,4 JIO"
 #define WIFI_PASS "Dextris@123"
 
-#define WIFI_CONNECTED_BIT BIT0
+#define WIFI_CONNECTED_BIT BIT0				//Bit flag for WIFI connected event
 //used to only inform (signal)to application that wifi event has accurred
 static EventGroupHandle_t wifi_event_group;			
 
@@ -51,8 +51,8 @@ static void wifi_event_handler(void *arg,			            //User defined pointer
 
 void wifi_init(void)
 {
-    // ✅ REQUIRED: NVS initialization for Wi-Fi
-    esp_err_t ret = nvs_flash_init();
+    // "nvs_flash_init(): Prepare flash memory so ESP32 can store persistent data.",REQUIRED: NVS initialization for Wi-Fi
+    esp_err_t ret = nvs_flash_init();					//This erases and reinitializes NVS. if flash storagen is full or currpted
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES ||
         ret == ESP_ERR_NVS_NEW_VERSION_FOUND)
     {

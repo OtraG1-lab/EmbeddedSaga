@@ -24,10 +24,10 @@ void app_main(void)//
 
     // Create timer (1 second period)
     led_timer = xTimerCreate(
-        "LED_Timer",                 // Timer name
+        "LED_Timer",                		  // Timer name
         pdMS_TO_TICKS(1000),         // Period = 1 second
-        pdTRUE,                      // Auto-reload
-        NULL,                        // Timer ID (not used)
+        pdTRUE,                      		// Auto-reload
+        NULL,                               // Timer ID (not used)
         led_timer_callback           // Callback function
     );
 

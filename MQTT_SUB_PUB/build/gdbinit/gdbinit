@@ -1,0 +1,2 @@
+source D:/Laxmi/ESP32_Projects/MQTT_SUB_PUB/build/gdbinit/symbols
+source D:/Laxmi/ESP32_Projects/MQTT_SUB_PUB/build/gdbinit/connect
