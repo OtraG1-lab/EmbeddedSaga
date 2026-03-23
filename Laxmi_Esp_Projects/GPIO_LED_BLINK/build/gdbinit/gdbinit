@@ -1,0 +1,2 @@
+source D:/Laxmi/ESP32_Projects/GPIO_LED_BLINK/build/gdbinit/symbols
+source D:/Laxmi/ESP32_Projects/GPIO_LED_BLINK/build/gdbinit/connect

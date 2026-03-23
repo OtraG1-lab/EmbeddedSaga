@@ -1,0 +1,2 @@
+source D:/Laxmi/ESP32_Projects/OTA_HTTP/build/bootloader/gdbinit/symbols
+source D:/Laxmi/ESP32_Projects/OTA_HTTP/build/bootloader/gdbinit/connect

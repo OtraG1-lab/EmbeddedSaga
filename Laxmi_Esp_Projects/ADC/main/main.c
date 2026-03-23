@@ -1,0 +1,31 @@
+#include "driver/adc.h"
+#include "esp_log.h"						//Required for ESP_LOGI(), which prints messages to serial/log console
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+
+#define ADC_CHANNEL ADC1_CHANNEL_6 // GPIO34
+static const char *TAG = "ADC_TEST";				//TAG is used by ESP_LOGI to label messages in the console.
+
+void app_main(void) 
+{
+    // Configure ADC
+    //Number of bits for ADC reading. ESP32 ADC supports 9–12 bits → here we use 12-bit (0–4095).
+    adc1_config_width(ADC_WIDTH_BIT_12);         // 12-bit ADC
+    
+    
+    /*ADC_ATTEN_DB_0 → 0–1.1V, ADC_ATTEN_DB_6 → 0–2V, ADC_ATTEN_DB_11 → 0–3.3V (matches ESP32 supply voltage)
+    Important: Without this, ADC might saturate at 1.1V if your sensor outputs higher voltage. */
+    adc1_config_channel_atten(ADC_CHANNEL, ADC_ATTEN_DB_11); // 0-3.3V range
+
+    while(1) {
+        int raw = adc1_get_raw(ADC_CHANNEL);   // Read raw value
+        
+        /*  voltage = raw *(Vref / 2^bit12 - 1)*/
+        float voltage = raw * (3.3 / 4095.0);  // Convert to voltage
+	
+	//Logs ADC value and voltage to the ESP-IDF monitor console.
+        ESP_LOGI(TAG, "Raw ADC: %d | Voltage: %.3f V", raw, voltage);
+
+        vTaskDelay(500 / portTICK_PERIOD_MS);  // Delay 0.5 sec
+    }
+}

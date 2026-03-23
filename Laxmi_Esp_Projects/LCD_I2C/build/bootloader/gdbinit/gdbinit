@@ -1,0 +1,2 @@
+source D:/Laxmi/ESP32_Projects/LCD_I2C/build/bootloader/gdbinit/symbols
+source D:/Laxmi/ESP32_Projects/LCD_I2C/build/bootloader/gdbinit/connect

@@ -1,0 +1,478 @@
+Command: C:\Espressif\python_env\idf5.5_py3.11_env\Scripts\python.exe C:\Espressif\frameworks\esp-idf-v5.5.3\tools/idf_monitor.py -p COM5 -b 115200 --toolchain-prefix xtensa-esp32-elf- --target esp32 --revision 0 D:\Laxmi\ESP32_Projects\MQTT_TASKS\build\app-template.elf D:\Laxmi\ESP32_Projects\MQTT_TASKS\build\bootloader\bootloader.elf --force-color -m 'C:\Espressif\python_env\idf5.5_py3.11_env\Scripts\python.exe' 'C:\Espressif\frameworks\esp-idf-v5.5.3\tools\idf.py'
+ets Jul 29 2019 12:21:46
+
+rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:6280
+load:0x40078000,len:15864
+load:0x40080400,len:3920
+entry 0x40080644
+[0;32mI (27) boot: ESP-IDF v5.5.3 2nd stage bootloader[0m
+[0;32mI (27) boot: compile time Mar  6 2026 13:27:09[0m
+[0;32mI (28) boot: Multicore bootloader[0m
+[0;32mI (29) boot: chip revision: v3.1[0m
+[0;32mI (32) boot.esp32: SPI Speed      : 40MHz[0m
+[0;32mI (35) boot.esp32: SPI Mode       : DIO[0m
+[0;32mI (39) boot.esp32: SPI Flash Size : 2MB[0m
+[0;32mI (42) boot: Enabling RNG early entropy source...[0m
+[0;32mI (47) boot: Partition Table:[0m
+[0;32mI (49) boot: ## Label            Usage          Type ST Offset   Length[0m
+[0;32mI (56) boot:  0 nvs              WiFi data        01 02 00009000 00006000[0m
+[0;32mI (62) boot:  1 phy_init         RF data          01 01 0000f000 00001000[0m
+[0;32mI (69) boot:  2 factory          factory app      00 00 00010000 00100000[0m
+[0;32mI (75) boot: End of partition table[0m
+[0;32mI (79) esp_image: segment 0: paddr=00010020 vaddr=3f400020 size=1d710h (120592) map[0m
+[0;32mI (127) esp_image: segment 1: paddr=0002d738 vaddr=3ffb0000 size=028e0h ( 10464) load[0m
+I (132) esp_image: segment 2: paddr=00030020 vaddr=400d0020 size=9b334h (635700) map
+[0;32mI (349) esp_image: segment 3: paddr=000cb35c vaddr=3ffb28e0 size=01a58h (  6744) load[0m
+[0;32mI (352) esp_image: segment 4: paddr=000ccdbc vaddr=40080000 size=18134h ( 98612) load[0m
+[0;32mI (391) esp_image: segment 5: paddr=000e4ef8 vaddr=50000000 size=00020h (    32) load[0m
+[0;32mI (403) boot: Loaded app from partition at offset 0x10000[0m
+[0;32mI (403) boot: Disabling RNG early entropy source...[0m
+I (414) cpu_start: Multicore app
+[0;32mI (422) cpu_start: GPIO 3 and 1 are used as console UART I/O pins[0m
+[0;32mI (422) cpu_start: Pro cpu start user code[0m
+[0;32mI (422) cpu_start: cpu freq: 160000000 Hz[0m
+[0;32mI (424) app_init: Application information:[0m
+[0;32mI (428) app_init: Project name:     app-template[0m
+[0;32mI (432) app_init: App version:      26393940-dirty[0m
+[0;32mI (437) app_init: Compile time:     Mar  6 2026 13:20:28[0m
+[0;32mI (442) app_init: ELF file SHA256:  25f683eb2...[0m
+[0;32mI (446) app_init: ESP-IDF:          v5.5.3[0m
+[0;32mI (450) efuse_init: Min chip rev:     v0.0[0m
+[0;32mI (454) efuse_init: Max chip rev:     v3.99 [0m
+[0;32mI (458) efuse_init: Chip rev:         v3.1[0m
+[0;32mI (462) heap_init: Initializing. RAM available for dynamic allocation:[0m
+[0;32mI (468) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM[0m
+[0;32mI (473) heap_init: At 3FFB8C40 len 000273C0 (156 KiB): DRAM[0m
+[0;32mI (478) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM[0m
+[0;32mI (484) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM[0m
+[0;32mI (489) heap_init: At 40098134 len 00007ECC (31 KiB): IRAM[0m
+[0;32mI (496) spi_flash: detected chip: generic[0m
+[0;32mI (498) spi_flash: flash io: dio[0m
+[0;33mW (501) spi_flash: Detected size(4096k) larger than the size in the binary image header(2048k). Using the size in the binary image header.[0m
+[0;32mI (514) main_task: Started on CPU0[0m
+[0;32mI (524) main_task: Calling app_main()[0m
+[0;32mI (544) MQTT_EXAMPLE: Initializing Wi-Fi...[0m
+[0;32mI (564) wifi:wifi driver task: 3ffc0b80, prio:23, stack:6656, core=0[0m
+[0;32mI (574) wifi:wifi firmware version: 4df78f2[0m
+[0;32mI (574) wifi:wifi certification version: v7.0[0m
+[0;32mI (574) wifi:config NVS flash: enabled[0m
+[0;32mI (574) wifi:config nano formatting: disabled[0m
+[0;32mI (574) wifi:Init data frame dynamic rx buffer num: 32[0m
+[0;32mI (584) wifi:Init static rx mgmt buffer num: 5[0m
+[0;32mI (584) wifi:Init management short buffer num: 32[0m
+[0;32mI (594) wifi:Init dynamic tx buffer num: 32[0m
+[0;32mI (594) wifi:Init static rx buffer size: 1600[0m
+[0;32mI (594) wifi:Init static rx buffer num: 10[0m
+[0;32mI (604) wifi:Init dynamic rx buffer num: 32[0m
+[0;32mI (604) wifi_init: rx ba win: 6[0m
+[0;32mI (614) wifi_init: accept mbox: 6[0m
+[0;32mI (614) wifi_init: tcpip mbox: 32[0m
+[0;32mI (614) wifi_init: udp mbox: 6[0m
+[0;32mI (614) wifi_init: tcp mbox: 6[0m
+[0;32mI (624) wifi_init: tcp tx win: 5760[0m
+[0;32mI (624) wifi_init: tcp rx win: 5760[0m
+[0;32mI (624) wifi_init: tcp mss: 1440[0m
+[0;32mI (634) wifi_init: WiFi IRAM OP enabled[0m
+[0;32mI (634) wifi_init: WiFi RX IRAM OP enabled[0m
+[0;32mI (644) phy_init: phy_version 4863,a3a4459,Oct 28 2025,14:30:06[0m
+[0;32mI (714) wifi:mode : sta (00:4b:12:ee:dd:cc)[0m
+[0;32mI (714) wifi:enable tsf[0m
+[0;32mI (714) MQTT_EXAMPLE: Wi-Fi initialization finished.[0m
+[1;31mE (724) esp-tls: [sock=54] connect() error: Host is unreachable[0m
+[1;31mE (724) transport_base: Failed to open a new connection: 32772[0m
+[1;31mE (724) mqtt_client: Error transport connect[0m
+[0;32mI (734) wifi:new:<1,0>, old:<1,0>, ap:<255,255>, sta:<1,0>, prof:1, snd_ch_cfg:0x0[0m
+[0;32mI (744) wifi:state: init -> auth (0xb0)[0m
+[0;32mI (744) MQTT_EXAMPLE: Published message: Hello ESP32 #0[0m
+[0;32mI (744) MQTT_EXAMPLE: Published sensor data: Sensor value: 1[0m
+[0;32mI (744) main_task: Returned from app_main()[0m
+[0;32mI (754) wifi:state: auth -> assoc (0x0)[0m
+[0;32mI (764) wifi:state: assoc -> init (0x2c0)[0m
+[0;32mI (774) wifi:new:<1,0>, old:<1,0>, ap:<255,255>, sta:<1,0>, prof:1, snd_ch_cfg:0x0[0m
+[0;32mI (774) MQTT_EXAMPLE: Wi-Fi Disconnected. Reconnecting...[0m
+[0;32mI (3194) MQTT_EXAMPLE: Wi-Fi Disconnected. Reconnecting...[0m
+[0;32mI (3244) wifi:new:<1,0>, old:<1,0>, ap:<255,255>, sta:<1,0>, prof:1, snd_ch_cfg:0x0[0m
+[0;32mI (3244) wifi:state: init -> auth (0xb0)[0m
+[0;32mI (3264) wifi:state: auth -> assoc (0x0)[0m
+[0;32mI (3274) wifi:state: assoc -> run (0x10)[0m
+[0;32mI (3314) wifi:connected with DEXTRIS 2,4 JIO, aid = 1, channel 1, BW20, bssid = b4:a7:c6:b5:ee:76[0m
+[0;32mI (3314) wifi:security: WPA2-PSK, phy: bgn, rssi: -55[0m
+[0;32mI (3314) wifi:pm start, type: 1[0m
+
+[0;32mI (3314) wifi:dp: 1, bi: 102400, li: 3, scale listen interval from 307200 us to 307200 us[0m
+[0;32mI (3334) wifi:<ba-add>idx:0 (ifx:0, b4:a7:c6:b5:ee:76), tid:0, ssn:0, winSize:64[0m
+[0;32mI (3344) wifi:dp: 2, bi: 102400, li: 4, scale listen interval from 307200 us to 409600 us[0m
+[0;32mI (3344) wifi:AP's beacon interval = 102400 us, DTIM period = 2[0m
+[0;32mI (3754) MQTT_EXAMPLE: Published sensor data: Sensor value: 2[0m
+[0;32mI (4354) esp_netif_handlers: sta ip: 192.168.29.216, mask: 255.255.255.0, gw: 192.168.29.1[0m
+[0;32mI (4354) MQTT_EXAMPLE: Got IP: 192.168.29.216[0m
+[0;32mI (5744) MQTT_EXAMPLE: Published message: Hello ESP32 #1[0m
+[0;32mI (6754) MQTT_EXAMPLE: Published sensor data: Sensor value: 3[0m
+[0;32mI (9754) MQTT_EXAMPLE: Published sensor data: Sensor value: 4[0m
+[0;32mI (10744) MQTT_EXAMPLE: Published message: Hello ESP32 #2[0m
+[0;32mI (12754) MQTT_EXAMPLE: Published sensor data: Sensor value: 5[0m
+[1;31mE (25744) esp-tls: [sock=54] select() timeout[0m
+[1;31mE (25744) transport_base: Failed to open a new connection: 32774[0m
+[1;31mE (25744) mqtt_client: Error transport connect[0m
+[0;32mI (25744) MQTT_EXAMPLE: Published message: Hello ESP32 #3[0m
+[0;32mI (25744) MQTT_EXAMPLE: Published sensor data: Sensor value: 6[0m
+[0;32mI (28754) MQTT_EXAMPLE: Published sensor data: Sensor value: 7[0m
+[0;32mI (30744) MQTT_EXAMPLE: Published message: Hello ESP32 #4[0m
+[0;32mI (31754) MQTT_EXAMPLE: Published sensor data: Sensor value: 8[0m
+[0;32mI (34754) MQTT_EXAMPLE: Published sensor data: Sensor value: 9[0m
+[0;32mI (35744) MQTT_EXAMPLE: Published message: Hello ESP32 #5[0m
+[0;32mI (37754) MQTT_EXAMPLE: Published sensor data: Sensor value: 10[0m
+[1;31mE (50754) esp-tls: [sock=54] select() timeout[0m
+[1;31mE (50754) transport_base: Failed to open a new connection: 32774[0m
+[1;31mE (50754) mqtt_client: Error transport connect[0m
+[0;32mI (50754) MQTT_EXAMPLE: Published message: Hello ESP32 #6[0m
+[0;32mI (50754) MQTT_EXAMPLE: Published sensor data: Sensor value: 11[0m
+[0;32mI (53764) MQTT_EXAMPLE: Published sensor data: Sensor value: 12[0m
+[0;32mI (55754) MQTT_EXAMPLE: Published message: Hello ESP32 #7[0m
+[0;32mI (56764) MQTT_EXAMPLE: Published sensor data: Sensor value: 13[0m
+[0;32mI (59764) MQTT_EXAMPLE: Published sensor data: Sensor value: 14[0m
+[0;32mI (60754) MQTT_EXAMPLE: Published message: Hello ESP32 #8[0m
+[0;32mI (62764) MQTT_EXAMPLE: Published sensor data: Sensor value: 15[0m
+[1;31mE (75764) esp-tls: [sock=54] select() timeout[0m
+[1;31mE (75764) transport_base: Failed to open a new connection: 32774[0m
+[1;31mE (75764) mqtt_client: Error transport connect[0m
+[0;32mI (75764) MQTT_EXAMPLE: Published message: Hello ESP32 #9[0m
+[0;32mI (75764) MQTT_EXAMPLE: Published sensor data: Sensor value: 16[0m
+[0;32mI (78774) MQTT_EXAMPLE: Published sensor data: Sensor value: 17[0m
+[0;32mI (80764) MQTT_EXAMPLE: Published message: Hello ESP32 #10[0m
+[0;32mI (81774) MQTT_EXAMPLE: Published sensor data: Sensor value: 18[0m
+[0;32mI (84774) MQTT_EXAMPLE: Published sensor data: Sensor value: 19[0m
+[0;32mI (85764) MQTT_EXAMPLE: Published message: Hello ESP32 #11[0m
+[0;32mI (86604) wifi:<ba-add>idx:1 (ifx:0, b4:a7:c6:b5:ee:76), tid:7, ssn:0, winSize:64[0m
+[0;32mI (87774) MQTT_EXAMPLE: Published sensor data: Sensor value: 20[0m
+[1;31mE (100774) esp-tls: [sock=54] select() timeout[0m
+[1;31mE (100774) transport_base: Failed to open a new connection: 32774[0m
+[1;31mE (100774) mqtt_client: Error transport connect[0m
+[0;32mI (100774) MQTT_EXAMPLE: Published message: Hello ESP32 #12[0m
+[0;32mI (100774) MQTT_EXAMPLE: Published sensor data: Sensor value: 21[0m
+[0;32mI (103784) MQTT_EXAMPLE: Published sensor data: Sensor value: 22[0m
+[0;32mI (105774) MQTT_EXAMPLE: Published message: Hello ESP32 #13[0m
+[0;32mI (106784) MQTT_EXAMPLE: Published sensor data: Sensor value: 23[0m
+[0;32mI (109784) MQTT_EXAMPLE: Published sensor data: Sensor value: 24[0m
+[0;32mI (110774) MQTT_EXAMPLE: Published message: Hello ESP32 #14[0m
+[0;32mI (112784) MQTT_EXAMPLE: Published sensor data: Sensor value: 25[0m
+[1;31mE (125784) esp-tls: [sock=54] select() timeout[0m
+[1;31mE (125784) transport_base: Failed to open a new connection: 32774[0m
+[1;31mE (125784) mqtt_client: Error transport connect[0m
+[0;32mI (125784) MQTT_EXAMPLE: Published message: Hello ESP32 #15[0m
+[0;32mI (125784) MQTT_EXAMPLE: Published sensor data: Sensor value: 26[0m
+[0;32mI (128794) MQTT_EXAMPLE: Published sensor data: Sensor value: 27[0m
+[0;32mI (130784) MQTT_EXAMPLE: Published message: Hello ESP32 #16[0m
+[0;32mI (131794) MQTT_EXAMPLE: Published sensor data: Sensor value: 28[0m
+[0;32mI (134794) MQTT_EXAMPLE: Published sensor data: Sensor value: 29[0m
+[0;32mI (135784) MQTT_EXAMPLE: Published message: Hello ESP32 #17[0m
+[0;32mI (137794) MQTT_EXAMPLE: Published sensor data: Sensor value: 30[0m
+[1;31mE (150794) esp-tls: [sock=54] select() timeout[0m
+[1;31mE (150794) transport_base: Failed to open a new connection: 32774[0m
+[1;31mE (150794) mqtt_client: Error transport connect[0m
+[0;32mI (150794) MQTT_EXAMPLE: Published message: Hello ESP32 #18[0m
+[0;32mI (150794) MQTT_EXAMPLE: Published sensor data: Sensor value: 31[0m
+[0;32mI (153804) MQTT_EXAMPLE: Published sensor data: Sensor value: 32[0m
+[0;32mI (155794) MQTT_EXAMPLE: Published message: Hello ESP32 #19[0m
+[0;32mI (156804) MQTT_EXAMPLE: Published sensor data: Sensor value: 33[0m
+[0;32mI (159804) MQTT_EXAMPLE: Published sensor data: Sensor value: 34[0m
+[0;32mI (160794) MQTT_EXAMPLE: Published message: Hello ESP32 #20[0m
+[0;32mI (162804) MQTT_EXAMPLE: Published sensor data: Sensor value: 35[0m
+[1;31mE (175804) esp-tls: [sock=54] select() timeout[0m
+[1;31mE (175804) transport_base: Failed to open a new connection: 32774[0m
+[1;31mE (175804) mqtt_client: Error transport connect[0m
+[0;32mI (175804) MQTT_EXAMPLE: Published message: Hello ESP32 #21[0m
+[0;32mI (175804) MQTT_EXAMPLE: Published sensor data: Sensor value: 36[0m
+���������������������������������������������������������������� (178814) MQTT_EXAMPLE: Published sensor data: Sensor value: 37
+[0;32mI (180804) MQTT_EXAMPLE: Published message: Hello ESP32 #22[0m
+[0;32mI (181814) MQTT_EXAMPLE: Published sensor data: Sensor value: 38[0m
+[0;32mI (184814) MQTT_EXAMPLE: Published sensor data: Sensor value: 39[0m
+[0;32mI (185804) MQTT_EXAMPLE: Published message: Hello ESP32 #23[0m
+[0;32mI (187814) MQTT_EXAMPLE: Published sensor data: Sensor value: 40[0m
+[1;31mE (200814) esp-tls: [sock=54] select() timeout[0m
+[1;31mE (200814) transport_base: Failed to open a new connection: 32774[0m
+[1;31mE (200814) mqtt_client: Error transport connect[0m
+[0;32mI (200814) MQTT_EXAMPLE: Published message: Hello ESP32 #24[0m
+[0;32mI (200814) MQTT_EXAMPLE: Published sensor data: Sensor value: 41[0m
+[0;32mI (203824) MQTT_EXAMPLE: Published sensor data: Sensor value: 42[0m
+[0;32mI (205814) MQTT_EXAMPLE: Published message: Hello ESP32 #25[0m
+[0;32mI (206824) MQTT_EXAMPLE: Published sensor data: Sensor value: 43[0m
+[0;32mI (209824) MQTT_EXAMPLE: Published sensor data: Sensor value: 44[0m
+[0;32mI (210814) MQTT_EXAMPLE: Published message: Hello ESP32 #26[0m
+[0;32mI (212824) MQTT_EXAMPLE: Published sensor data: Sensor value: 45[0m
+[1;31mE (225824) esp-tls: [sock=54] select() timeout[0m
+[1;31mE (225824) transport_base: Failed to open a new connection: 32774[0m
+[1;31mE (225824) mqtt_client: Error transport connect[0m
+[0;32mI (225824) MQTT_EXAMPLE: Published message: Hello ESP32 #27[0m
+[0;32mI (225824) MQTT_EXAMPLE: Published sensor data: Sensor value: 46[0m
+[0;32mI (228834) MQTT_EXAMPLE: Published sensor data: Sensor value: 47[0m
+[0;32mI (230824) MQTT_EXAMPLE: Published message: Hello ESP32 #28[0m
+[0;32mI (231834) MQTT_EXAMPLE: Published sensor data: Sensor value: 48[0m
+[0;32mI (234834) MQTT_EXAMPLE: Published sensor data: Sensor value: 49[0m
+[0;32mI (235824) MQTT_EXAMPLE: Published message: Hello ESP32 #29[0m
+[0;32mI (237834) MQTT_EXAMPLE: Published sensor data: Sensor value: 50[0m
+[1;31mE (250834) esp-tls: [sock=54] select() timeout[0m
+[1;31mE (250834) transport_base: Failed to open a new connection: 32774[0m
+[1;31mE (250834) mqtt_client: Error transport connect[0m
+[0;32mI (250834) MQTT_EXAMPLE: Published message: Hello ESP32 #30[0m
+[0;32mI (250834) MQTT_EXAMPLE: Published sensor data: Sensor value: 51[0m
+[0;32mI (253844) MQTT_EXAMPLE: Published sensor data: Sensor value: 52[0m
+[0;32mI (255834) MQTT_EXAMPLE: Published message: Hello ESP32 #31[0m
+[0;32mI (256844) MQTT_EXAMPLE: Published sensor data: Sensor value: 53[0m
+[0;32mI (259844) MQTT_EXAMPLE: Published sensor data: Sensor value: 54[0m
+[0;32mI (260834) MQTT_EXAMPLE: Published message: Hello ESP32 #32[0m
+[0;32mI (262844) MQTT_EXAMPLE: Published sensor data: Sensor value: 55[0m
+[1;31mE (275844) esp-tls: [sock=54] select() timeout[0m
+[1;31mE (275844) transport_base: Failed to open a new connection: 32774[0m
+[1;31mE (275844) mqtt_client: Error transport connect[0m
+[0;32mI (275844) MQTT_EXAMPLE: Published message: Hello ESP32 #33[0m
+[0;32mI (275844) MQTT_EXAMPLE: Published sensor data: Sensor value: 56[0m
+[0;32mI (278854) MQTT_EXAMPLE: Published sensor data: Sensor value: 57[0m
+[0;32mI (280844) MQTT_EXAMPLE: Published message: Hello ESP32 #34[0m
+[0;32mI (281854) MQTT_EXAMPLE: Published sensor data: Sensor value: 58[0m
+[0;32mI (284854) MQTT_EXAMPLE: Published sensor data: Sensor value: 59[0m
+[0;32mI (285844) MQTT_EXAMPLE: Published message: Hello ESP32 #35[0m
+[0;32mI (287854) MQTT_EXAMPLE: Published sensor data: Sensor value: 60[0m
+[1;31mE (300854) esp-tls: [sock=54] select() timeout[0m
+[1;31mE (300854) transport_base: Failed to open a new connection: 32774[0m
+[1;31mE (300854) mqtt_client: Error transport connect[0m
+[0;32mI (300854) MQTT_EXAMPLE: Published message: Hello ESP32 #36[0m
+[0;32mI (300854) MQTT_EXAMPLE: Published sensor data: Sensor value: 61[0m
+[0;32mI (303864) MQTT_EXAMPLE: Published sensor data: Sensor value: 62[0m
+[0;32mI (305854) MQTT_EXAMPLE: Published message: Hello ESP32 #37[0m
+[0;32mI (306864) MQTT_EXAMPLE: Published sensor data: Sensor value: 63[0m
+[0;32mI (309864) MQTT_EXAMPLE: Published sensor data: Sensor value: 64[0m
+[0;32mI (310854) MQTT_EXAMPLE: Published message: Hello ESP32 #38[0m
+[0;32mI (312864) MQTT_EXAMPLE: Published sensor data: Sensor value: 65[0m
+[1;31mE (325864) esp-tls: [sock=54] select() timeout[0m
+[1;31mE (325864) transport_base: Failed to open a new connection: 32774[0m
+[1;31mE (325864) mqtt_client: Error transport connect[0m
+[0;32mI (325864) MQTT_EXAMPLE: Published message: Hello ESP32 #39[0m
+[0;32mI (325864) MQTT_EXAMPLE: Published sensor data: Sensor value: 66[0m
+[0;32mI (328874) MQTT_EXAMPLE: Published sensor data: Sensor value: 67[0m
+[0;32mI (330864) MQTT_EXAMPLE: Published message: Hello ESP32 #40[0m
+[0;32mI (331874) MQTT_EXAMPLE: Published sensor data: Sensor value: 68[0m
+[0;32mI (334874) MQTT_EXAMPLE: Published sensor data: Sensor value: 69[0m
+[0;32mI (335864) MQTT_EXAMPLE: Published message: Hello ESP32 #41[0m
+����������������������������������������������������������������(337874) MQTT_EXAMPLE: Published sensor data: Sensor value: 70
+[1;31mE (350874) esp-tls: [sock=54] select() timeout[0m
+[1;31mE (350874) transport_base: Failed to open a new connection: 32774[0m
+[1;31mE (350874) mqtt_client: Error transport connect[0m
+[0;32mI (350874) MQTT_EXAMPLE: Published message: Hello ESP32 #42[0m
+[0;32mI (350874) MQTT_EXAMPLE: Published sensor data: Sensor value: 71[0m
+[0;32mI (353884) MQTT_EXAMPLE: Published sensor data: Sensor value: 72[0m
+[0;32mI (355874) MQTT_EXAMPLE: Published message: Hello ESP32 #43[0m
+[0;32mI (356884) MQTT_EXAMPLE: Published sensor data: Sensor value: 73[0m
+[0;32mI (359884) MQTT_EXAMPLE: Published sensor data: Sensor value: 74[0m
+[0;32mI (360874) MQTT_EXAMPLE: Published message: Hello ESP32 #44[0m
+[0;32mI (362884) MQTT_EXAMPLE: Published sensor data: Sensor value: 75[0m
+[1;31mE (375884) esp-tls: [sock=54] select() timeout[0m
+[1;31mE (375884) transport_base: Failed to open a new connection: 32774[0m
+[1;31mE (375884) mqtt_client: Error transport connect[0m
+[0;32mI (375884) MQTT_EXAMPLE: Published message: Hello ESP32 #45[0m
+[0;32mI (375884) MQTT_EXAMPLE: Published sensor data: Sensor value: 76[0m
+[0;32mI (378894) MQTT_EXAMPLE: Published sensor data: Sensor value: 77[0m
+[0;32mI (380884) MQTT_EXAMPLE: Published message: Hello ESP32 #46[0m
+[0;32mI (381894) MQTT_EXAMPLE: Published sensor data: Sensor value: 78[0m
+[0;32mI (384894) MQTT_EXAMPLE: Published sensor data: Sensor value: 79[0m
+[0;32mI (385884) MQTT_EXAMPLE: Published message: Hello ESP32 #47[0m
+[0;32mI (387894) MQTT_EXAMPLE: Published sensor data: Sensor value: 80[0m
+[1;31mE (400894) esp-tls: [sock=54] select() timeout[0m
+[1;31mE (400894) transport_base: Failed to open a new connection: 32774[0m
+[1;31mE (400894) mqtt_client: Error transport connect[0m
+[0;32mI (400894) MQTT_EXAMPLE: Published message: Hello ESP32 #48[0m
+[0;32mI (400894) MQTT_EXAMPLE: Published sensor data: Sensor value: 81[0m
+[0;32mI (403904) MQTT_EXAMPLE: Published sensor data: Sensor value: 82[0m
+[0;32mI (405894) MQTT_EXAMPLE: Published message: Hello ESP32 #49[0m
+[0;32mI (406904) MQTT_EXAMPLE: Published sensor data: Sensor value: 83[0m
+[0;32mI (409904) MQTT_EXAMPLE: Published sensor data: Sensor value: 84[0m
+[0;32mI (410894) MQTT_EXAMPLE: Published message: Hello ESP32 #50[0m
+[0;32mI (412904) MQTT_EXAMPLE: Published sensor data: Sensor value: 85[0m
+[1;31mE (425904) esp-tls: [sock=54] select() timeout[0m
+[1;31mE (425904) transport_base: Failed to open a new connection: 32774[0m
+[1;31mE (425904) mqtt_client: Error transport connect[0m
+[0;32mI (425904) MQTT_EXAMPLE: Published message: Hello ESP32 #51[0m
+[0;32mI (425904) MQTT_EXAMPLE: Published sensor data: Sensor value: 86[0m
+[0;32mI (428914) MQTT_EXAMPLE: Published sensor data: Sensor value: 87[0m
+[0;32mI (430904) MQTT_EXAMPLE: Published message: Hello ESP32 #52[0m
+[0;32mI (431914) MQTT_EXAMPLE: Published sensor data: Sensor value: 88[0m
+[0;32mI (434914) MQTT_EXAMPLE: Published sensor data: Sensor value: 89[0m
+[0;32mI (435904) MQTT_EXAMPLE: Published message: Hello ESP32 #53[0m
+[0;32mI (437914) MQTT_EXAMPLE: Published sensor data: Sensor value: 90[0m
+[1;31mE (450914) esp-tls: [sock=54] select() timeout[0m
+[1;31mE (450914) transport_base: Failed to open a new connection: 32774[0m
+[1;31mE (450914) mqtt_client: Error transport connect[0m
+[0;32mI (450914) MQTT_EXAMPLE: Published message: Hello ESP32 #54[0m
+[0;32mI (450914) MQTT_EXAMPLE: Published sensor data: Sensor value: 91[0m
+[0;32mI (453924) MQTT_EXAMPLE: Published sensor data: Sensor value: 92[0m
+[0;32mI (455914) MQTT_EXAMPLE: Published message: Hello ESP32 #55[0m
+[0;32mI (456924) MQTT_EXAMPLE: Published sensor data: Sensor value: 93[0m
+[0;32mI (459924) MQTT_EXAMPLE: Published sensor data: Sensor value: 94[0m
+[0;32mI (460914) MQTT_EXAMPLE: Published message: Hello ESP32 #56[0m
+[0;32mI (462924) MQTT_EXAMPLE: Published sensor data: Sensor value: 95[0m
+[1;31mE (475924) esp-tls: [sock=54] select() timeout[0m
+[1;31mE (475924) transport_base: Failed to open a new connection: 32774[0m
+[1;31mE (475924) mqtt_client: Error transport connect[0m
+[0;32mI (475924) MQTT_EXAMPLE: Published message: Hello ESP32 #57[0m
+[0;32mI (475924) MQTT_EXAMPLE: Published sensor data: Sensor value: 96[0m
+[0;32mI (478934) MQTT_EXAMPLE: Published sensor data: Sensor value: 97[0m
+[0;32mI (480924) MQTT_EXAMPLE: Published message: Hello ESP32 #58[0m
+[0;32mI (481934) MQTT_EXAMPLE: Published sensor data: Sensor value: 98[0m
+[0;32mI (484934) MQTT_EXAMPLE: Published sensor data: Sensor value: 99[0m
+[0;32mI (485924) MQTT_EXAMPLE: Published message: Hello ESP32 #59[0m
+[0;32mI (487934) MQTT_EXAMPLE: Published sensor data: Sensor value: 100[0m
+����������������������������������������������������������������500934) esp-tls: [sock=54] select() timeout
+[1;31mE (500934) transport_base: Failed to open a new connection: 32774[0m
+[1;31mE (500934) mqtt_client: Error transport connect[0m
+[0;32mI (500934) MQTT_EXAMPLE: Published message: Hello ESP32 #60[0m
+[0;32mI (500934) MQTT_EXAMPLE: Published sensor data: Sensor value: 101[0m
+[0;32mI (503944) MQTT_EXAMPLE: Published sensor data: Sensor value: 102[0m
+[0;32mI (505934) MQTT_EXAMPLE: Published message: Hello ESP32 #61[0m
+[0;32mI (506944) MQTT_EXAMPLE: Published sensor data: Sensor value: 103[0m
+[0;32mI (509944) MQTT_EXAMPLE: Published sensor data: Sensor value: 104[0m
+[0;32mI (510934) MQTT_EXAMPLE: Published message: Hello ESP32 #62[0m
+[0;32mI (512944) MQTT_EXAMPLE: Published sensor data: Sensor value: 105[0m
+[1;31mE (525944) esp-tls: [sock=54] select() timeout[0m
+[1;31mE (525944) transport_base: Failed to open a new connection: 32774[0m
+[1;31mE (525944) mqtt_client: Error transport connect[0m
+[0;32mI (525944) MQTT_EXAMPLE: Published message: Hello ESP32 #63[0m
+[0;32mI (525944) MQTT_EXAMPLE: Published sensor data: Sensor value: 106[0m
+[0;32mI (528954) MQTT_EXAMPLE: Published sensor data: Sensor value: 107[0m
+[0;32mI (530944) MQTT_EXAMPLE: Published message: Hello ESP32 #64[0m
+[0;32mI (531954) MQTT_EXAMPLE: Published sensor data: Sensor value: 108[0m
+[0;32mI (534954) MQTT_EXAMPLE: Published sensor data: Sensor value: 109[0m
+[0;32mI (535944) MQTT_EXAMPLE: Published message: Hello ESP32 #65[0m
+[0;32mI (537954) MQTT_EXAMPLE: Published sensor data: Sensor value: 110[0m
+[1;31mE (550954) esp-tls: [sock=54] select() timeout[0m
+[1;31mE (550954) transport_base: Failed to open a new connection: 32774[0m
+[1;31mE (550954) mqtt_client: Error transport connect[0m
+[0;32mI (550954) MQTT_EXAMPLE: Published message: Hello ESP32 #66[0m
+[0;32mI (550954) MQTT_EXAMPLE: Published sensor data: Sensor value: 111[0m
+[0;32mI (553964) MQTT_EXAMPLE: Published sensor data: Sensor value: 112[0m
+[0;32mI (555954) MQTT_EXAMPLE: Published message: Hello ESP32 #67[0m
+[0;32mI (556964) MQTT_EXAMPLE: Published sensor data: Sensor value: 113[0m
+[0;32mI (559964) MQTT_EXAMPLE: Published sensor data: Sensor value: 114[0m
+[0;32mI (560954) MQTT_EXAMPLE: Published message: Hello ESP32 #68[0m
+[0;32mI (562964) MQTT_EXAMPLE: Published sensor data: Sensor value: 115[0m
+[1;31mE (575964) esp-tls: [sock=54] select() timeout[0m
+[1;31mE (575964) transport_base: Failed to open a new connection: 32774[0m
+[1;31mE (575964) mqtt_client: Error transport connect[0m
+[0;32mI (575964) MQTT_EXAMPLE: Published message: Hello ESP32 #69[0m
+[0;32mI (575964) MQTT_EXAMPLE: Published sensor data: Sensor value: 116[0m
+[0;32mI (578974) MQTT_EXAMPLE: Published sensor data: Sensor value: 117[0m
+[0;32mI (580964) MQTT_EXAMPLE: Published message: Hello ESP32 #70[0m
+[0;32mI (581974) MQTT_EXAMPLE: Published sensor data: Sensor value: 118[0m
+[0;32mI (584974) MQTT_EXAMPLE: Published sensor data: Sensor value: 119[0m
+[0;32mI (585964) MQTT_EXAMPLE: Published message: Hello ESP32 #71[0m
+[0;32mI (587974) MQTT_EXAMPLE: Published sensor data: Sensor value: 120[0m
+[1;31mE (600974) esp-tls: [sock=54] select() timeout[0m
+[1;31mE (600974) transport_base: Failed to open a new connection: 32774[0m
+[1;31mE (600974) mqtt_client: Error transport connect[0m
+[0;32mI (600974) MQTT_EXAMPLE: Published message: Hello ESP32 #72[0m
+[0;32mI (600974) MQTT_EXAMPLE: Published sensor data: Sensor value: 121[0m
+[0;32mI (603984) MQTT_EXAMPLE: Published sensor data: Sensor value: 122[0m
+[0;32mI (605974) MQTT_EXAMPLE: Published message: Hello ESP32 #73[0m
+[0;32mI (606984) MQTT_EXAMPLE: Published sensor data: Sensor value: 123[0m
+[0;32mI (609984) MQTT_EXAMPLE: Published sensor data: Sensor value: 124[0m
+[0;32mI (610974) MQTT_EXAMPLE: Published message: Hello ESP32 #74[0m
+[0;32mI (612984) MQTT_EXAMPLE: Published sensor data: Sensor value: 125[0m
+[1;31mE (625984) esp-tls: [sock=54] select() timeout[0m
+[1;31mE (625984) transport_base: Failed to open a new connection: 32774[0m
+[1;31mE (625984) mqtt_client: Error transport connect[0m
+[0;32mI (625984) MQTT_EXAMPLE: Published message: Hello ESP32 #75[0m
+[0;32mI (625984) MQTT_EXAMPLE: Published sensor data: Sensor value: 126[0m
+[0;32mI (628994) MQTT_EXAMPLE: Published sensor data: Sensor value: 127[0m
+[0;32mI (630984) MQTT_EXAMPLE: Published message: Hello ESP32 #76[0m
+[0;32mI (631994) MQTT_EXAMPLE: Published sensor data: Sensor value: 128[0m
+[0;32mI (634994) MQTT_EXAMPLE: Published sensor data: Sensor value: 129[0m
+[0;32mI (635984) MQTT_EXAMPLE: Published message: Hello ESP32 #77[0m
+[0;32mI (637994) MQTT_EXAMPLE: Published sensor data: Sensor value: 130[0m
+����������������������������������������������������������������650994) esp-tls: [sock=54] select() timeout
+[1;31mE (650994) transport_base: Failed to open a new connection: 32774[0m
+[1;31mE (650994) mqtt_client: Error transport connect[0m
+[0;32mI (650994) MQTT_EXAMPLE: Published message: Hello ESP32 #78[0m
+[0;32mI (650994) MQTT_EXAMPLE: Published sensor data: Sensor value: 131[0m
+[0;32mI (654004) MQTT_EXAMPLE: Published sensor data: Sensor value: 132[0m
+[0;32mI (655994) MQTT_EXAMPLE: Published message: Hello ESP32 #79[0m
+[0;32mI (657004) MQTT_EXAMPLE: Published sensor data: Sensor value: 133[0m
+[0;32mI (660004) MQTT_EXAMPLE: Published sensor data: Sensor value: 134[0m
+[0;32mI (660994) MQTT_EXAMPLE: Published message: Hello ESP32 #80[0m
+[0;32mI (663004) MQTT_EXAMPLE: Published sensor data: Sensor value: 135[0m
+[1;31mE (676004) esp-tls: [sock=54] select() timeout[0m
+[1;31mE (676004) transport_base: Failed to open a new connection: 32774[0m
+[1;31mE (676004) mqtt_client: Error transport connect[0m
+[0;32mI (676004) MQTT_EXAMPLE: Published message: Hello ESP32 #81[0m
+[0;32mI (676004) MQTT_EXAMPLE: Published sensor data: Sensor value: 136[0m
+���������������������������������������������������������������� (679014) MQTT_EXAMPLE: Published sensor data: Sensor value: 137
+[0;32mI (681004) MQTT_EXAMPLE: Published message: Hello ESP32 #82[0m
+[0;32mI (682014) MQTT_EXAMPLE: Published sensor data: Sensor value: 138[0m
+[0;32mI (685014) MQTT_EXAMPLE: Published sensor data: Sensor value: 139[0m
+[0;32mI (686004) MQTT_EXAMPLE: Published message: Hello ESP32 #83[0m
+[0;32mI (688014) MQTT_EXAMPLE: Published sensor data: Sensor value: 140[0m
+[1;31mE (701014) esp-tls: [sock=54] select() timeout[0m
+[1;31mE (701014) transport_base: Failed to open a new connection: 32774[0m
+[1;31mE (701014) mqtt_client: Error transport connect[0m
+[0;32mI (701014) MQTT_EXAMPLE: Published message: Hello ESP32 #84[0m
+[0;32mI (701014) MQTT_EXAMPLE: Published sensor data: Sensor value: 141[0m
+[0;32mI (704024) MQTT_EXAMPLE: Published sensor data: Sensor value: 142[0m
+[0;32mI (706014) MQTT_EXAMPLE: Published message: Hello ESP32 #85[0m
+[0;32mI (707024) MQTT_EXAMPLE: Published sensor data: Sensor value: 143[0m
+[0;32mI (710024) MQTT_EXAMPLE: Published sensor data: Sensor value: 144[0m
+[0;32mI (711014) MQTT_EXAMPLE: Published message: Hello ESP32 #86[0m
+[0;32mI (713024) MQTT_EXAMPLE: Published sensor data: Sensor value: 145[0m
+[1;31mE (726024) esp-tls: [sock=54] select() timeout[0m
+[1;31mE (726024) transport_base: Failed to open a new connection: 32774[0m
+[1;31mE (726024) mqtt_client: Error transport connect[0m
+[0;32mI (726024) MQTT_EXAMPLE: Published message: Hello ESP32 #87[0m
+[0;32mI (726024) MQTT_EXAMPLE: Published sensor data: Sensor value: 146[0m
+[0;32mI (729034) MQTT_EXAMPLE: Published sensor data: Sensor value: 147[0m
+[0;32mI (731024) MQTT_EXAMPLE: Published message: Hello ESP32 #88[0m
+[0;32mI (732034) MQTT_EXAMPLE: Published sensor data: Sensor value: 148[0m
+[0;32mI (735034) MQTT_EXAMPLE: Published sensor data: Sensor value: 149[0m
+[0;32mI (736024) MQTT_EXAMPLE: Published message: Hello ESP32 #89[0m
+[0;32mI (738034) MQTT_EXAMPLE: Published sensor data: Sensor value: 150[0m
+[1;31mE (751034) esp-tls: [sock=54] select() timeout[0m
+[1;31mE (751034) transport_base: Failed to open a new connection: 32774[0m
+[1;31mE (751034) mqtt_client: Error transport connect[0m
+[0;32mI (751034) MQTT_EXAMPLE: Published message: Hello ESP32 #90[0m
+[0;32mI (751034) MQTT_EXAMPLE: Published sensor data: Sensor value: 151[0m
+[0;32mI (754044) MQTT_EXAMPLE: Published sensor data: Sensor value: 152[0m
+[0;32mI (756034) MQTT_EXAMPLE: Published message: Hello ESP32 #91[0m
+[0;32mI (757044) MQTT_EXAMPLE: Published sensor data: Sensor value: 153[0m
+[0;32mI (760044) MQTT_EXAMPLE: Published sensor data: Sensor value: 154[0m
+[0;32mI (761034) MQTT_EXAMPLE: Published message: Hello ESP32 #92[0m
+[0;32mI (763044) MQTT_EXAMPLE: Published sensor data: Sensor value: 155[0m
+[1;31mE (776044) esp-tls: [sock=54] select() timeout[0m
+[1;31mE (776044) transport_base: Failed to open a new connection: 32774[0m
+[1;31mE (776044) mqtt_client: Error transport connect[0m
+[0;32mI (776044) MQTT_EXAMPLE: Published message: Hello ESP32 #93[0m
+[0;32mI (776044) MQTT_EXAMPLE: Published sensor data: Sensor value: 156[0m
+[0;32mI (779054) MQTT_EXAMPLE: Published sensor data: Sensor value: 157[0m
+[0;32mI (781044) MQTT_EXAMPLE: Published message: Hello ESP32 #94[0m
+[0;32mI (782054) MQTT_EXAMPLE: Published sensor data: Sensor value: 158[0m
+[0;32mI (785054) MQTT_EXAMPLE: Published sensor data: Sensor value: 159[0m
+[0;32mI (786044) MQTT_EXAMPLE: Published message: Hello ESP32 #95[0m
+[0;32mI (788054) MQTT_EXAMPLE: Published sensor data: Sensor value: 160[0m
+[1;31mE (801054) esp-tls: [sock=54] select() timeout[0m
+[1;31mE (801054) transport_base: Failed to open a new connection: 32774[0m
+[1;31mE (801054) mqtt_client: Error transport connect[0m
+[0;32mI (801054) MQTT_EXAMPLE: Published message: Hello ESP32 #96[0m
+[0;32mI (801054) MQTT_EXAMPLE: Published sensor data: Sensor value: 161[0m
+[0;32mI (804064) MQTT_EXAMPLE: Published sensor data: Sensor value: 162[0m
+[0;32mI (806054) MQTT_EXAMPLE: Published message: Hello ESP32 #97[0m
+[0;32mI (807064) MQTT_EXAMPLE: Published sensor data: Sensor value: 163[0m
+[0;32mI (810064) MQTT_EXAMPLE: Published sensor data: Sensor value: 164[0m
+[0;32mI (811054) MQTT_EXAMPLE: Published message: Hello ESP32 #98[0m
+[0;32mI (813064) MQTT_EXAMPLE: Published sensor data: Sensor value: 165[0m
+[1;31mE (826064) esp-tls: [sock=54] select() timeout[0m
+[1;31mE (826064) transport_base: Failed to open a new connection: 32774[0m
+[1;31mE (826064) mqtt_client: Error transport connect[0m
+[0;32mI (826064) MQTT_EXAMPLE: Published message: Hello ESP32 #99[0m
+[0;32mI (826064) MQTT_EXAMPLE: Published sensor data: Sensor value: 166[0m
+[0;32mI (829074) MQTT_EXAMPLE: Published sensor data: Sensor value: 167[0m
+[0;32mI (831064) MQTT_EXAMPLE: Published message: Hello ESP32 #100[0m
+[0;32mI (832074) MQTT_EXAMPLE: Published sensor data: Sensor value: 168[0m

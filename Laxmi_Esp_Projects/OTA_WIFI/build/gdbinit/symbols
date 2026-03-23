@@ -1,0 +1,9 @@
+
+
+# Load bootloader symbols
+set confirm off
+    add-symbol-file D:/Laxmi/ESP32_Projects/OTA_WIFI/build/bootloader/bootloader.elf
+set confirm on
+
+# Load application symbols
+file D:/Laxmi/ESP32_Projects/OTA_WIFI/build/app-template.elf

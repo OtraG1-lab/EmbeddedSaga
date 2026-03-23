@@ -1,0 +1,13 @@
+# Target labels
+ bootloader
+# Source files and their labels
+D:/Laxmi/Dextris_Project/GPIO_PWM/build/CMakeFiles/bootloader
+D:/Laxmi/Dextris_Project/GPIO_PWM/build/CMakeFiles/bootloader.rule
+D:/Laxmi/Dextris_Project/GPIO_PWM/build/CMakeFiles/bootloader-complete.rule
+D:/Laxmi/Dextris_Project/GPIO_PWM/build/bootloader-prefix/src/bootloader-stamp/bootloader-build.rule
+D:/Laxmi/Dextris_Project/GPIO_PWM/build/bootloader-prefix/src/bootloader-stamp/bootloader-configure.rule
+D:/Laxmi/Dextris_Project/GPIO_PWM/build/bootloader-prefix/src/bootloader-stamp/bootloader-download.rule
+D:/Laxmi/Dextris_Project/GPIO_PWM/build/bootloader-prefix/src/bootloader-stamp/bootloader-install.rule
+D:/Laxmi/Dextris_Project/GPIO_PWM/build/bootloader-prefix/src/bootloader-stamp/bootloader-mkdir.rule
+D:/Laxmi/Dextris_Project/GPIO_PWM/build/bootloader-prefix/src/bootloader-stamp/bootloader-patch.rule
+D:/Laxmi/Dextris_Project/GPIO_PWM/build/bootloader-prefix/src/bootloader-stamp/bootloader-update.rule
