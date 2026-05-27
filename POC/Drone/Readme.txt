@@ -1,0 +1,5 @@
+-poc for drones with object detection and camera
+-object detection using lidar/any sensor
+-esp32cam, raspberry pi, edge ai ?
+-reference
+   -

@@ -1,0 +1,5 @@
+-poc for self driving car
+-object detection using lidar/any sensor
+-esp32cam, raspberry pi, edge ai ?
+-reference
+   - https://github.com/dctian/DeepPiCar

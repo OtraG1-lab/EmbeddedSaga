@@ -1,0 +1,5 @@
+-poc smart home applications
+-
+-esp32cam, raspberry pi,lora,ble, edge ai ?
+-reference
+   -
