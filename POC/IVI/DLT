@@ -1,0 +1,369 @@
+If you're developing applications on a Raspberry Pi, especially for Automotive / Qt IVI / embedded Linux, DLT (Diagnostic Log and Trace) is a good standardized logging framework.
+
+1. What is DLT?
+
+DLT = Diagnostic Log and Trace, commonly used in AUTOSAR-based automotive systems.
+
+It provides:
+
+Standardized logging APIs
+Runtime log-level control
+Application/context-based filtering
+Centralized log collection
+Network logging
+DLT Viewer support
+
+The most common implementation is GENIVI/COVESA DLT-daemon.
+
+2. DLT Architecture on Raspberry Pi
++-----------------------+
+| Your Qt/C++ App       |
+|                       |
+| DLT_LOG_INFO()        |
+| DLT_LOG_ERROR()       |
++----------+------------+
+           |
+           | Unix Socket
+           v
++-----------------------+
+| dlt-daemon            |
+|                       |
+| /run/dlt/dlt          |
++----------+------------+
+           |
+           +----------------------+
+           |                      |
+           v                      v
+      Local Logs             DLT Viewer
+                              (TCP 3490)
+
+Applications send logs to dlt-daemon, and DLT Viewer can collect and display them.
+
+3. Install DLT on Raspberry Pi OS
+Option 1: Build from source
+sudo apt update
+
+sudo apt install -y \
+    git \
+    cmake \
+    build-essential \
+    pkg-config
+
+Clone the repository:
+
+git clone https://github.com/COVESA/dlt-daemon.git
+cd dlt-daemon
+
+Build:
+
+mkdir build
+cd build
+
+cmake ..
+make -j$(nproc)
+sudo make install
+4. Start DLT Daemon
+
+Typically:
+
+sudo dlt-daemon
+
+Check whether it is running:
+
+ps -ef | grep dlt
+
+You should see something similar to:
+
+dlt-daemon
+
+Depending on the configuration, the application socket is usually:
+
+/run/dlt/dlt
+
+or:
+
+/tmp/dlt
+5. Basic C++ Application Using DLT
+
+Create:
+
+#include <dlt/dlt.h>
+
+DLT_DECLARE_CONTEXT(myContext);
+
+int main()
+{
+    DLT_REGISTER_APP("MYAP", "My Raspberry Pi Application");
+
+    DLT_REGISTER_CONTEXT(
+        myContext,
+        "MAIN",
+        "Main Application Context"
+    );
+
+    DLT_LOG(myContext, DLT_LOG_INFO,
+        DLT_STRING("Application started"));
+
+    DLT_LOG(myContext, DLT_LOG_DEBUG,
+        DLT_STRING("Debug message"));
+
+    DLT_LOG(myContext, DLT_LOG_WARN,
+        DLT_STRING("Warning message"));
+
+    DLT_LOG(myContext, DLT_LOG_ERROR,
+        DLT_STRING("Error message"));
+
+    DLT_UNREGISTER_CONTEXT(myContext);
+    DLT_UNREGISTER_APP();
+
+    return 0;
+}
+6. Compile the Application
+
+If DLT is installed under standard paths:
+
+g++ dlt_test.cpp -o dlt_test -ldlt
+
+Run:
+
+./dlt_test
+7. Important DLT Concepts
+
+DLT organizes logs using:
+
+Concept	Example	Purpose
+Application ID (APID)	MYAP	Identifies application
+Context ID (CTID)	MAIN	Identifies module/component
+Log Level	INFO	Message severity
+
+Example:
+
+Application: MYAP
+Context: MAIN
+Log Level: INFO
+Message: Application started
+8. Multiple Contexts in a Raspberry Pi Application
+
+For a larger Qt application:
+
+#include <dlt/dlt.h>
+
+DLT_DECLARE_CONTEXT(uiContext);
+DLT_DECLARE_CONTEXT(networkContext);
+DLT_DECLARE_CONTEXT(mediaContext);
+
+int main()
+{
+    DLT_REGISTER_APP("QTIV", "Qt IVI Application");
+
+    DLT_REGISTER_CONTEXT(uiContext, "UI", "User Interface");
+    DLT_REGISTER_CONTEXT(networkContext, "NETW", "Networking");
+    DLT_REGISTER_CONTEXT(mediaContext, "MEDI", "Media");
+
+    DLT_LOG(uiContext, DLT_LOG_INFO,
+        DLT_STRING("UI initialized"));
+
+    DLT_LOG(networkContext, DLT_LOG_INFO,
+        DLT_STRING("Network connected"));
+
+    DLT_LOG(mediaContext, DLT_LOG_INFO,
+        DLT_STRING("Media player started"));
+
+    return 0;
+}
+9. Integrating DLT with CMake
+
+Example CMakeLists.txt:
+
+cmake_minimum_required(VERSION 3.16)
+
+project(DLTExample)
+
+set(CMAKE_CXX_STANDARD 17)
+
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(DLT REQUIRED automotive-dlt)
+
+add_executable(dlt_app main.cpp)
+
+target_include_directories(dlt_app PRIVATE
+    ${DLT_INCLUDE_DIRS}
+)
+
+target_link_libraries(dlt_app
+    ${DLT_LIBRARIES}
+)
+
+Alternatively:
+
+target_link_libraries(dlt_app PRIVATE dlt)
+
+depending on how DLT was installed.
+
+10. Using DLT with Qt Applications
+
+You can create a Qt logging wrapper.
+
+DLTLogger.h
+#ifndef DLTLOGGER_H
+#define DLTLOGGER_H
+
+#include <dlt/dlt.h>
+
+DLT_DECLARE_CONTEXT(qtContext);
+
+class DLTLogger
+{
+public:
+    static void initialize();
+    static void shutdown();
+};
+
+#endif
+DLTLogger.cpp
+#include "DLTLogger.h"
+
+DLT_DEFINE_CONTEXT(qtContext);
+
+void DLTLogger::initialize()
+{
+    DLT_REGISTER_APP("QTAP", "Qt Application");
+    DLT_REGISTER_CONTEXT(qtContext, "MAIN", "Main Context");
+
+    DLT_LOG(qtContext, DLT_LOG_INFO,
+            DLT_STRING("Qt Application initialized"));
+}
+
+void DLTLogger::shutdown()
+{
+    DLT_UNREGISTER_CONTEXT(qtContext);
+    DLT_UNREGISTER_APP();
+}
+
+Use it in main.cpp:
+
+#include <QApplication>
+#include "DLTLogger.h"
+
+int main(int argc, char *argv[])
+{
+    QApplication app(argc, argv);
+
+    DLTLogger::initialize();
+
+    DLT_LOG(qtContext,
+            DLT_LOG_INFO,
+            DLT_STRING("Starting Qt event loop"));
+
+    int result = app.exec();
+
+    DLTLogger::shutdown();
+
+    return result;
+}
+11. Redirect Qt's qDebug/qInfo/qWarning/qCritical to DLT
+
+This is particularly useful for Raspberry Pi Qt applications.
+
+Qt supports a custom message handler:
+
+#include <QDebug>
+#include <dlt/dlt.h>
+
+DLT_DECLARE_CONTEXT(qtContext);
+
+void dltMessageHandler(
+    QtMsgType type,
+    const QMessageLogContext &context,
+    const QString &msg)
+{
+    Q_UNUSED(context);
+
+    QByteArray localMsg = msg.toLocal8Bit();
+
+    switch (type)
+    {
+        case QtDebugMsg:
+            DLT_LOG(qtContext, DLT_LOG_DEBUG,
+                    DLT_STRING(localMsg.constData()));
+            break;
+
+        case QtInfoMsg:
+            DLT_LOG(qtContext, DLT_LOG_INFO,
+                    DLT_STRING(localMsg.constData()));
+            break;
+
+        case QtWarningMsg:
+            DLT_LOG(qtContext, DLT_LOG_WARN,
+                    DLT_STRING(localMsg.constData()));
+            break;
+
+        case QtCriticalMsg:
+        case QtFatalMsg:
+            DLT_LOG(qtContext, DLT_LOG_ERROR,
+                    DLT_STRING(localMsg.constData()));
+            break;
+    }
+}
+
+Register the handler:
+
+qInstallMessageHandler(dltMessageHandler);
+
+Then existing Qt logging automatically goes to DLT:
+
+qDebug() << "Debug message";
+
+qInfo() << "Application started";
+
+qWarning() << "Network issue";
+
+qCritical() << "Fatal problem";
+
+This is probably the best approach for your Qt/Qt IVI Raspberry Pi project.
+
+12. Viewing Logs Using DLT Viewer
+
+You can use:
+
+COVESA DLT Viewer
+
+DLT Viewer can connect to Raspberry Pi over Ethernet.
+
+Typical configuration:
+
+Raspberry Pi IP: 192.168.1.100
+Port: 3490
+
+You can see logs grouped as:
+
+QTAP
+ ├── MAIN
+ │    ├── INFO
+ │    ├── WARNING
+ │    └── ERROR
+Recommended Setup for Your Raspberry Pi + Qt Project
+
+I recommend this structure:
+
+Raspberry Pi
+│
+├── dlt-daemon
+│
+└── Qt Application
+     │
+     ├── Qt Message Handler
+     │      └── qDebug/qInfo/qWarning → DLT
+     │
+     ├── Application Context
+     │      └── MAIN
+     │
+     ├── Media Context
+     │      └── MEDIA
+     │
+     └── Network Context
+            └── NETW
+
+For your Qt IVI / embedded Raspberry Pi environment, redirecting Qt's logging system to DLT using qInstallMessageHandler() gives you the cleanest integration.
+
+If you want, I can also provide a complete working example with DLT daemon + Qt CMake project + systemd service for Raspberry Pi.
