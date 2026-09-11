@@ -1,7 +1,7 @@
-FROM ghcr.io/otrag1-lab/rpiqtcrossbuild:26.8
+FROM ghcr.io/otrag1-lab/rpiqtcrossbuild:26.9
 
 # Update the repoPath according to yours
-ARG projectDir=project
+ARG projectDir=mediaplayer
 ARG repoPath=/home/otra/QTonRaspberryPi/
 
 RUN rm -rf $repoPath$projectDir
