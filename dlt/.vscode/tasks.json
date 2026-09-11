@@ -1,0 +1,24 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "DLT: Package Raspberry Pi 5 (ARM64)",
+      "type": "shell",
+      "command": "powershell -ExecutionPolicy Bypass -File ./scripts/package-raspberry-pi.ps1",
+      "problemMatcher": []
+    },
+    {
+      "label": "DLT: Package Ubuntu (AMD64)",
+      "type": "shell",
+      "command": "powershell -ExecutionPolicy Bypass -File ./scripts/package-ubuntu.ps1",
+      "problemMatcher": []
+    },
+    {
+      "label": "DLT: Run Ubuntu Docker",
+      "type": "shell",
+      "command": "powershell -ExecutionPolicy Bypass -File ./scripts/run-ubuntu-docker.ps1",
+      "isBackground": true,
+      "problemMatcher": []
+    }
+  ]
+}
