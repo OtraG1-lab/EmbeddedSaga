@@ -1,0 +1,28 @@
+package com.example.vehicle
+
+interface Vehicle {
+    version {
+        major 1
+        minor 0
+    }
+
+    attribute UInt32 speed
+
+    method getSpeed {
+        out {
+            UInt32 speed
+        }
+    }
+
+    method setSpeed {
+        in {
+            UInt32 speed
+        }
+    }
+
+    broadcast speedChanged {
+        out {
+            UInt32 speed
+        }
+    }
+}
