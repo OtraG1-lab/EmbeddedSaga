@@ -1,0 +1,144 @@
+FROM ghcr.io/otrag1-lab/rpiqtcrossbuild:26.8
+
+WORKDIR /tmp
+
+# Install build tools required for patched D-Bus and CommonAPI
+RUN apt-get update && apt-get install -y \
+    wget \
+    git \
+    patch \
+    autoconf \
+    automake \
+    libtool \
+    pkg-config \
+    && rm -rf /var/lib/apt/lists/*
+
+
+# ============================================================
+# 1. Download CommonAPI-D-Bus runtime and its patches
+# ============================================================
+
+RUN git clone --depth 1 \
+    https://github.com/COVESA/capicxx-dbus-runtime.git \
+    /tmp/commonapi-dbus
+
+
+# ============================================================
+# 2. Download D-Bus 1.4.16
+# ============================================================
+
+RUN wget -q \
+    http://dbus.freedesktop.org/releases/dbus/dbus-1.4.16.tar.gz \
+    && tar -xzf dbus-1.4.16.tar.gz
+
+
+WORKDIR /tmp/dbus-1.4.16
+
+
+# ============================================================
+# 3. Update old D-Bus configure scripts for ARM64
+# ============================================================
+
+RUN cp /usr/share/misc/config.sub config.sub \
+    && cp /usr/share/misc/config.guess config.guess \
+    && chmod +x config.sub config.guess
+
+
+# ============================================================
+# 4. Apply CommonAPI-D-Bus patches
+# ============================================================
+
+RUN for p in \
+    capi-dbus-add-send-with-reply-set-notify.patch \
+    capi-dbus-send-with-reply-and-block-delete-reply-on-error.patch \
+    capi-dbus-correct-dbus-connection-block-pending-call.patch \
+    capi-dbus-add-support-for-custom-marshalling.patch \
+    capi-dbus-block-acquire-io-path-on-send.patch; \
+    do patch -p1 < /tmp/commonapi-dbus/src/dbus-patches/$p || exit 1; \
+    done
+
+
+# ============================================================
+# 5. Configure patched D-Bus for ARM64
+# ============================================================
+
+RUN CC=/usr/bin/aarch64-linux-gnu-gcc-14 \
+    CXX=/usr/bin/aarch64-linux-gnu-g++-14 \
+    CFLAGS=--sysroot=/build/sysroot \
+    CXXFLAGS=--sysroot=/build/sysroot \
+    LDFLAGS=--sysroot=/build/sysroot \
+    ./configure \
+    --host=aarch64-linux-gnu \
+    --prefix=/opt/patched-dbus-arm64 \
+    --disable-tests \
+    --disable-asserts
+
+
+# ============================================================
+# 6. Build patched D-Bus
+# ============================================================
+
+RUN make -C dbus -j$(nproc)
+
+
+# ============================================================
+# 7. Install patched D-Bus
+# ============================================================
+
+RUN make -C dbus install
+
+
+# ============================================================
+# 8. Build CommonAPI Core for ARM64
+# ============================================================
+
+WORKDIR /tmp
+
+RUN git clone --depth 1 \
+    https://github.com/COVESA/capicxx-core-runtime.git \
+    /tmp/core
+
+
+# CommonAPI Core source currently needs this include
+RUN sed -i '/#include <tuple>/a #include <string>' \
+    /tmp/core/include/CommonAPI/Types.hpp
+
+
+# Configure, build and install CommonAPI Core
+RUN cmake -S /tmp/core \
+    -B /tmp/core-build \
+    -DCMAKE_TOOLCHAIN_FILE=/build/toolchain.cmake \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/opt/commonapi-arm64 \
+    && cmake --build /tmp/core-build -j$(nproc) \
+    && cmake --install /tmp/core-build
+
+
+# ============================================================
+# 9. Build CommonAPI-D-Bus runtime for ARM64
+# ============================================================
+
+WORKDIR /tmp
+
+ENV PKG_CONFIG_PATH=/opt/patched-dbus-arm64/lib/pkgconfig:/opt/commonapi-arm64/lib/pkgconfig
+ENV CMAKE_PREFIX_PATH=/opt/commonapi-arm64:/opt/patched-dbus-arm64
+
+RUN cmake -S /tmp/commonapi-dbus \
+    -B /tmp/commonapi-dbus-build \
+    -DCMAKE_TOOLCHAIN_FILE=/build/toolchain.cmake \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/opt/commonapi-arm64 \
+    -DCommonAPI_DIR=/opt/commonapi-arm64/lib/cmake/CommonAPI-3.2.4 \
+    -DUSE_INSTALLED_COMMONAPI=ON \
+    -DUSE_INSTALLED_DBUS=ON \
+    -DDBus1_INCLUDE_DIR=/opt/patched-dbus-arm64/include/dbus-1.0 \
+    -DDBus1_ARCH_INCLUDE_DIR=/opt/patched-dbus-arm64/lib/dbus-1.0/include \
+    -DDBus1_LIBRARY=/opt/patched-dbus-arm64/lib/libdbus-1.so
+
+
+# Build CommonAPI-D-Bus
+RUN cmake --build /tmp/commonapi-dbus-build -j$(nproc)
+
+
+# Install CommonAPI-D-Bus
+RUN cmake --install /tmp/commonapi-dbus-build
