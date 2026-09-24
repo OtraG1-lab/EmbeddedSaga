@@ -1,0 +1,11 @@
+# Qt / CMake build files
+build/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# Qt Creator user-specific files
+*.user
+*.user.*
+.qtc_clangd/
