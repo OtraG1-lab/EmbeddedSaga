@@ -1,0 +1,10 @@
+{
+    "unicast" : "127.0.0.1",
+    "logging" : { "level" : "debug", "console" : "true" },
+    "applications" : [
+        {
+            "name" : "SomeipServerApp",
+            "id" : "0x1344"
+        }
+    ]
+}

@@ -1,0 +1,95 @@
+# syntax=docker/dockerfile:1
+
+# Build once with --target commonapi-generator-base --platform linux/amd64.
+FROM --platform=linux/amd64 debian:bookworm-slim AS generator-tools
+ENV DEBIAN_FRONTEND=noninteractive
+WORKDIR /opt/covesa
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates openjdk-17-jre-headless unzip wget \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN wget -q -O commonapi_core_generator.zip \
+        https://github.com/COVESA/capicxx-core-tools/releases/download/3.2.15/commonapi_core_generator.zip && \
+    wget -q -O commonapi_dbus_generator.zip \
+        https://github.com/COVESA/capicxx-dbus-tools/releases/download/3.2.15/commonapi_dbus_generator.zip && \
+    wget -q -O commonapi_someip_generator.zip \
+        https://github.com/COVESA/capicxx-someip-tools/releases/download/3.2.15/commonapi_someip_generator.zip && \
+    unzip -q commonapi_core_generator.zip -d core-gen && \
+    unzip -q commonapi_dbus_generator.zip -d dbus-gen && \
+    unzip -q commonapi_someip_generator.zip -d someip-gen
+
+FROM generator-tools AS commonapi-generator-base
+
+# Build once with --target commonapi-runtime-base --platform linux/arm64.
+FROM --platform=linux/arm64 debian:bookworm-slim AS runtime-builder
+ENV DEBIAN_FRONTEND=noninteractive
+ARG DLT_DAEMON_REF=v2.18.10
+ENV DLT_PREFIX=/opt/dlt
+ENV PKG_CONFIG_PATH=/opt/dlt/lib/pkgconfig:/usr/local/lib/pkgconfig
+ENV LD_LIBRARY_PATH=/opt/dlt/lib:/usr/local/lib
+WORKDIR /opt/covesa
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    autoconf automake build-essential ca-certificates cmake git \
+    dbus dbus-daemon dbus-x11 \
+    libboost-filesystem-dev libboost-system-dev libdbus-1-dev libexpat1-dev \
+    libglib2.0-dev libjson-c-dev libgstreamer1.0-dev \
+    gstreamer1.0-plugins-base gstreamer1.0-plugins-good \
+    gstreamer1.0-libav \
+    libtool patch pkg-config wget zlib1g-dev ninja-build \
+    qt6-base-dev qt6-declarative-dev qt6-webengine-dev libqt6svg6-dev \
+    qml6-module-qtqml qml6-module-qtqml-workerscript \
+    qml6-module-qtquick-controls qml6-module-qtquick-templates \
+    qml6-module-qtquick-layouts qml6-module-qtquick-window \
+    qml6-module-qtwebengine qt6-qmltooling-plugins \
+    libgl1-mesa-dev libxkbcommon-dev libxkbcommon-x11-dev \
+    libgl1-mesa-dri xvfb x11-utils x11vnc novnc websockify \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN git clone --depth 1 --branch "$DLT_DAEMON_REF" https://github.com/COVESA/dlt-daemon.git /tmp/dlt-daemon && \
+    cmake -S /tmp/dlt-daemon -B /tmp/dlt-daemon/build \
+        -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX="$DLT_PREFIX" \
+        -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_INSTALL_SYSCONFDIR=etc && \
+    cmake --build /tmp/dlt-daemon/build --parallel 2 && \
+    cmake --install /tmp/dlt-daemon/build && rm -rf /tmp/dlt-daemon
+
+RUN git clone --depth 1 -b 3.2.4 https://github.com/COVESA/capicxx-core-runtime.git && \
+    cmake -S capicxx-core-runtime -B capicxx-core-runtime/build \
+        -DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_PREFIX_PATH=/opt/dlt && \
+    cmake --build capicxx-core-runtime/build --target install
+
+RUN git clone --depth 1 -b 3.6.4 https://github.com/COVESA/vsomeip.git && \
+    cmake -S vsomeip -B vsomeip/build -DCMAKE_INSTALL_PREFIX=/usr/local && \
+    cmake --build vsomeip/build --target install && ldconfig
+
+RUN git clone --depth 1 -b 3.2.4 https://github.com/COVESA/capicxx-someip-runtime.git && \
+    cmake -S capicxx-someip-runtime -B capicxx-someip-runtime/build \
+        -DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_PREFIX_PATH=/usr/local && \
+    cmake --build capicxx-someip-runtime/build --target install
+
+RUN wget -q -O dbus-1.12.20.tar.gz https://dbus.freedesktop.org/releases/dbus/dbus-1.12.20.tar.gz && \
+    for patch_name in \
+        capi-dbus-1-pc.patch \
+        capi-dbus-add-send-with-reply-set-notify.patch \
+        capi-dbus-add-support-for-custom-marshalling.patch \
+        capi-dbus-block-acquire-io-path-on-send.patch \
+        capi-dbus-correct-dbus-connection-block-pending-call.patch \
+        capi-dbus-send-with-reply-and-block-delete-reply-on-error.patch; do \
+        wget -q -O "$patch_name" "https://raw.githubusercontent.com/COVESA/capicxx-dbus-runtime/master/src/dbus-patches/$patch_name"; \
+    done && \
+    tar -xf dbus-1.12.20.tar.gz && cd dbus-1.12.20 && \
+    for patch_file in ../capi-dbus-*.patch; do patch --batch --forward -p1 < "$patch_file" || true; done && \
+    ./configure --prefix=/usr/local --disable-doxygen-docs --disable-xml-docs \
+        --disable-tests --disable-systemd --disable-x11-autolaunch --disable-user-session && \
+    make -j2 && make install && ldconfig
+
+RUN git clone --depth 1 -b 3.2.3-r1 https://github.com/COVESA/capicxx-dbus-runtime.git && \
+    PKG_CONFIG_PATH=/opt/dlt/lib/pkgconfig:/usr/local/lib/pkgconfig cmake \
+        -S capicxx-dbus-runtime -B capicxx-dbus-runtime/build \
+        -DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_PREFIX_PATH="/opt/dlt;/usr/local" && \
+    cmake --build capicxx-dbus-runtime/build --target install && ldconfig
+
+FROM runtime-builder AS commonapi-runtime-base
+ENV PKG_CONFIG_PATH=/opt/dlt/lib/pkgconfig:/usr/local/lib/pkgconfig
+ENV LD_LIBRARY_PATH=/opt/dlt/lib:/usr/local/lib:/usr/lib/aarch64-linux-gnu:/lib/aarch64-linux-gnu

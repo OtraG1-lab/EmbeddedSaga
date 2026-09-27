@@ -1,0 +1,5 @@
+import "platform:/plugin/org.genivi.commonapi.dbus/deployment/CommonAPI-4-DBus_deployment_spec.fdepl"
+import "vehiclefunctions.fidl"
+
+define org.genivi.commonapi.dbus.deployment for interface com.example.vehicle.Vehicle {
+}

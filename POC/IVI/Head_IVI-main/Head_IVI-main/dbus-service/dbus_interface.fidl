@@ -1,0 +1,8 @@
+package commonapi.dbus
+interface DbusService {
+    version { major 1 minor 0 }
+    method triggerAction {
+        in { String command }
+        out { Boolean success }
+    }
+}

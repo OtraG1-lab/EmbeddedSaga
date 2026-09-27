@@ -1,0 +1,19 @@
+package org.example
+
+interface MediaPlayer {
+    version {
+        major 1
+        minor 0
+    }
+
+    method Play {
+    }
+
+    method Pause {
+    }
+
+    method Stop {
+    }
+
+    attribute String PlaybackStatus readonly
+}

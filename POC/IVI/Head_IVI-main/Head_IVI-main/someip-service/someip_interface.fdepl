@@ -1,0 +1,18 @@
+import "platform:/plugin/org.genivi.commonapi.someip/deployment/CommonAPI-4-SOMEIP_deployment_spec.fdepl"
+import "someip_interface.fidl"
+define org.genivi.commonapi.someip.deployment for interface commonapi.someip.SomeipService {
+    SomeIpServiceID = 4660
+    method transmitTelemetry {
+        SomeIpMethodID = 32769
+        SomeIpReliable = false
+    }
+}
+define org.genivi.commonapi.someip.deployment for provider as MySomeipProvider {
+    instance commonapi.someip.SomeipService {
+        SomeIpInstanceID = 1
+        InstanceId = "1"
+        SomeIpUnicastAddress = "127.0.0.1"
+        SomeIpReliableUnicastPort = 30509
+        SomeIpUnreliableUnicastPort = 30509
+    }
+}
