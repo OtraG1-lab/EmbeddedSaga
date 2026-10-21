@@ -1,0 +1,176 @@
+
+Building a Basic GNU Linux Distribution for Raspberry Pi 5 with the Yocto Project LTS Release Scarthgap
+
+The Yocto Project is a widely used solution for creating custom embedded Linux distributions. As a collaborative project under the Linux Foundation, it leverages the OpenEmbedded build framework and the bitbake tool. With its reference system, Poky, following a six-month release cycle, Yocto provides developers with metadata organized into layers and recipes to build packages and images.
+
+In this tutorial, we will guide you through building a very basic GNU/Linux image for the Raspberry Pi 5 using the Yocto LTS release, Scarthgap, and include systemd support. Follow these steps to get started using the community BSP layer meta-raspberrypi:
+
+Step 1: Download the Source Code
+To begin, clone the necessary repositories for Poky and Raspberry Pi-specific metadata:
+
+git clone -b scarthgap https://git.yoctoproject.org/poky poky-rpi
+cd poky-rpi
+git clone -b scarthgap https://github.com/agherzan/meta-raspberrypi.git
+Step 2: Initialize the Build Environment
+Yocto requires an initialized build environment. Run the following command to set it up:
+
+source oe-init-build-env
+Step 3: Add the BSP Layer for Raspberry Pi
+To include support for the Raspberry Pi hardware, add the meta-raspberrypi layer to the build configuration:
+
+bitbake-layers add-layer ../meta-raspberrypi
+Step 4: Configure Build Settings
+Modify the build configuration file (conf/local.conf) to target the Raspberry Pi 5, use systemd, and accept additional licensing flags. Append the following lines to the end of the file:
+
+MACHINE = "raspberrypi5"
+INIT_MANAGER = "systemd"
+LICENSE_FLAGS_ACCEPTED = "synaptics-killswitch"
+Step 5: Build the Image
+With the setup complete, build a minimal base image for the Raspberry Pi 5:
+
+bitbake core-image-base
+This process may take some time, depending on your system's resources.
+
+Step 6: Flash the Image and Boot the Raspberry Pi
+Once the build completes, flash the generated image onto a microSD card and insert it into your Raspberry Pi 5. Power it up, and it should boot into your custom Linux distribution.
+
+Step 7: Establish Serial Communication
+Use the Raspberry Pi Debug Probe to set up serial communication between your Raspberry Pi 5 and a PC. Log in as the user root with no password.
+
+Conclusion
+With these steps, you have built and deployed a basic Linux distribution tailored for the Raspberry Pi 5 using the Yocto Project. This lightweight image serves as a great starting point for adding additional features and customization to suit your embedded system needs. Whether you are a developer working on IoT devices, industrial applications, or personal projects, the Yocto Project offers unparalleled flexibility and control over your Linux-based systems.
+
+
+
+QT: with wlan up
+
+local.conf with IMAGE_INSTALL:append = " connman connman-client" to enable conman
+also IMAGE_INSTALL:append = " wlan-start"  for custom service
+
+
+Below are the commands to create a custom Yocto layer and recipe for a systemd service that enables wlan0 at boot on Raspberry Pi 5.
+
+1. Create a custom layer
+Run from your Yocto build environment, after source oe-init-build-env:
+
+
+bash
+bitbake-layers create-layer ../meta-custom
+bitbake-layers add-layer ../meta-custom
+2. Create the recipe directory
+
+bash
+mkdir -p ../meta-custom/recipes-connectivity/wlan-start/files
+
+cd ../meta-custom/recipes-connectivity/wlan-start/files
+3. Create the systemd service
+
+bash
+cat > wlan-start.service <<'EOF'
+[Unit]
+Description=Enable Raspberry Pi Wi-Fi interface
+After=systemd-udev-settle.service
+Before=connman.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/sbin/rfkill unblock wifi
+ExecStart=/usr/sbin/ip link set wlan0 up
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+EOF
+4. Create the BitBake recipe
+
+bash
+cat > ../wlan-start.bb <<'EOF'
+SUMMARY = "Enable wlan0 at boot"
+LICENSE = "CLOSED"
+
+SRC_URI = "file://wlan-start.service"
+
+inherit systemd
+
+S = "${WORKDIR}"
+
+SYSTEMD_SERVICE:${PN} = "wlan-start.service"
+SYSTEMD_AUTO_ENABLE:${PN} = "enable"
+
+RDEPENDS:${PN} += "iproute2 util-linux-rfkill"
+
+do_install() {
+    install -d ${D}${systemd_system_unitdir}
+    install -m 0644 ${WORKDIR}/wlan-start.service \
+        ${D}${systemd_system_unitdir}/wlan-start.service
+}
+
+FILES:${PN} += "${systemd_system_unitdir}/wlan-start.service"
+EOF
+5. Add the package to your image
+Append this line to conf/local.conf:
+
+
+bitbake
+IMAGE_INSTALL:append = " wlan-start"
+Make sure systemd is enabled:
+
+
+bitbake
+INIT_MANAGER = "systemd"
+6. Check and build
+
+bash
+bitbake-layers show-layers
+bitbake-layers show-recipes wlan-start
+bitbake wlan-start
+bitbake core-image-base
+
+
+
+gps module :Ublox Neo-6M GPS Module With EEPROM (GY-GPS6MV2 Ceramic Antenna Model) (9600 default Baud Rate) for Accurate Location Updates | NEO 6m GPS Module
+using URL ..
+config used in local.conf 
+
+MACHINE = "raspberrypi5"
+INIT_MANAGER = "systemd"
+LICENSE_FLAGS_ACCEPTED = "synaptics-killswitch"
+
+IMAGE_INSTALL:append = " connman connman-client"
+IMAGE_INSTALL:append = " wlan-start" 
+
+EXTRA_IMAGE_FEATURES:append = " ssh-server-dropbear"
+
+ENABLE_I2C = "1"
+KERNEL_MODULE_AUTOLOAD:rpi += "i2c-dev i2c-bcm2708"
+
+IMAGE_INSTALL:append = " i2c-tools ssd1306"
+
+ENABLE_SPI_BUS = "1"
+
+IMAGE_INSTALL:append = " python3-spidev"
+
+ENABLE_W1 = "1"
+
+#PREFERRED_VERSION_linux-raspberrypi = "6.12%"
+
+IMAGE_INSTALL:append = " python3-core python3-shell"
+
+ENABLE_UART = "1"
+
+RPI_EXTRA_CONFIG:append = "\n\
+dtoverlay=uart0\n\
+"
+
+IMAGE_INSTALL:append = " gpsd gps-utils"
+
+DISTRO_FEATURES:append = " pam"
+
+RPI_EXTRA_CONFIG:append = "\n\
+display_auto_detect=1 \n\
+"
+PACKAGECONFIG:append:pn-qtbase = " examples"
+PACKAGECONFIG:append:pn-qtdeclarative = " examples"
+
+IMAGE_INSTALL:append =  "qtbase-examples qtdeclarative-examples"
+
