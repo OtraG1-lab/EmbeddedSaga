@@ -1,9 +1,9 @@
 
-Building a Basic GNU Linux Distribution for Raspberry Pi 5 with the Yocto Project LTS Release Scarthgap
+Building a Basic GNU Linux Distribution for Raspberry Pi 4 Model B with the Yocto Project LTS Release Scarthgap
 
 The Yocto Project is a widely used solution for creating custom embedded Linux distributions. As a collaborative project under the Linux Foundation, it leverages the OpenEmbedded build framework and the bitbake tool. With its reference system, Poky, following a six-month release cycle, Yocto provides developers with metadata organized into layers and recipes to build packages and images.
 
-In this tutorial, we will guide you through building a very basic GNU/Linux image for the Raspberry Pi 5 using the Yocto LTS release, Scarthgap, and include systemd support. Follow these steps to get started using the community BSP layer meta-raspberrypi:
+In this tutorial, we will guide you through building a very basic GNU/Linux image for the Raspberry Pi 4 Model B using the Yocto LTS release, Scarthgap, and include systemd support. Follow these steps to get started using the community BSP layer meta-raspberrypi:
 
 Step 1: Download the Source Code
 To begin, clone the necessary repositories for Poky and Raspberry Pi-specific metadata:
@@ -20,25 +20,25 @@ To include support for the Raspberry Pi hardware, add the meta-raspberrypi layer
 
 bitbake-layers add-layer ../meta-raspberrypi
 Step 4: Configure Build Settings
-Modify the build configuration file (conf/local.conf) to target the Raspberry Pi 5, use systemd, and accept additional licensing flags. Append the following lines to the end of the file:
+Modify the build configuration file (conf/local.conf) to target the 64-bit Raspberry Pi 4 Model B, use systemd, and accept additional licensing flags. Append the following lines to the end of the file:
 
-MACHINE = "raspberrypi5"
+MACHINE = "raspberrypi4-64"
 INIT_MANAGER = "systemd"
 LICENSE_FLAGS_ACCEPTED = "synaptics-killswitch"
 Step 5: Build the Image
-With the setup complete, build a minimal base image for the Raspberry Pi 5:
+With the setup complete, build a minimal base image for the Raspberry Pi 4 Model B:
 
 bitbake core-image-base
 This process may take some time, depending on your system's resources.
 
 Step 6: Flash the Image and Boot the Raspberry Pi
-Once the build completes, flash the generated image onto a microSD card and insert it into your Raspberry Pi 5. Power it up, and it should boot into your custom Linux distribution.
+Once the build completes, flash the generated image onto a microSD card and insert it into your Raspberry Pi 4 Model B. Power it up, and it should boot into your custom Linux distribution.
 
 Step 7: Establish Serial Communication
-Use the Raspberry Pi Debug Probe to set up serial communication between your Raspberry Pi 5 and a PC. Log in as the user root with no password.
+Use the Raspberry Pi Debug Probe to set up serial communication between your Raspberry Pi 4 Model B and a PC. Log in as the user root with no password.
 
 Conclusion
-With these steps, you have built and deployed a basic Linux distribution tailored for the Raspberry Pi 5 using the Yocto Project. This lightweight image serves as a great starting point for adding additional features and customization to suit your embedded system needs. Whether you are a developer working on IoT devices, industrial applications, or personal projects, the Yocto Project offers unparalleled flexibility and control over your Linux-based systems.
+With these steps, you have built and deployed a basic Linux distribution tailored for the Raspberry Pi 4 Model B using the Yocto Project. This lightweight image serves as a great starting point for adding additional features and customization to suit your embedded system needs. Whether you are a developer working on IoT devices, industrial applications, or personal projects, the Yocto Project offers unparalleled flexibility and control over your Linux-based systems.
 
 
 
@@ -48,7 +48,7 @@ local.conf with IMAGE_INSTALL:append = " connman connman-client" to enable conma
 also IMAGE_INSTALL:append = " wlan-start"  for custom service
 
 
-Below are the commands to create a custom Yocto layer and recipe for a systemd service that enables wlan0 at boot on Raspberry Pi 5.
+Below are the commands to create a custom Yocto layer and recipe for a systemd service that enables wlan0 at boot on Raspberry Pi 4 Model B.
 
 1. Create a custom layer
 Run from your Yocto build environment, after source oe-init-build-env:
@@ -132,7 +132,7 @@ gps module :Ublox Neo-6M GPS Module With EEPROM (GY-GPS6MV2 Ceramic Antenna Mode
 using URL ..
 config used in local.conf 
 
-MACHINE = "raspberrypi5"
+MACHINE = "raspberrypi4-64"
 INIT_MANAGER = "systemd"
 LICENSE_FLAGS_ACCEPTED = "synaptics-killswitch"
 
@@ -173,4 +173,3 @@ PACKAGECONFIG:append:pn-qtbase = " examples"
 PACKAGECONFIG:append:pn-qtdeclarative = " examples"
 
 IMAGE_INSTALL:append =  "qtbase-examples qtdeclarative-examples"
-
